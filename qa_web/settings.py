@@ -1,3 +1,4 @@
+# coding:utf-8
 """
 Django settings for qa_web project.
 
@@ -90,7 +91,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
@@ -103,3 +104,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/') # 文件上传到服务器的路径
+MEDIA_URL = '/media/' # 保持与MEDIA_ROOT访问的一致性
