@@ -34,9 +34,6 @@ class Department(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=50)
 
-    class Meta:
-        ordering = ['name']
-
     def __unicode__(self):
         return self.name
 

@@ -64,4 +64,5 @@ if __name__ == "__main__":
     import_model("Information_classification.txt", Information_classification)
     import_model("Event_class.txt", Event_class)
     import_model("Team.txt", Team)
+    import_model("State.txt", State)
     print('Done!')
