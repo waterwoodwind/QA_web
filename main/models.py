@@ -5,10 +5,11 @@ from django.db import models
 class Location(models.Model):
     name = models.CharField(max_length=50)
 
+    def natural_key(self):
+        return (self.name)
+
     class Meta:
-        ordering = ['name']
-        verbose_name = '地点'
-        verbose_name_plural = '地点'
+        unique_together = (('name'),)
 
     def __unicode__(self):
         return self.name
@@ -16,8 +17,11 @@ class Location(models.Model):
 class Time_Bucket(models.Model):
     name = models.CharField(max_length=50)
 
+    def natural_key(self):
+        return (self.name)
+
     class Meta:
-        ordering = ['name']
+        unique_together = (('name'),)
 
     def __unicode__(self):
         return self.name
@@ -25,8 +29,11 @@ class Time_Bucket(models.Model):
 class Department(models.Model):
     name = models.CharField(max_length=50)
 
+    def natural_key(self):
+        return (self.name)
+
     class Meta:
-        ordering = ['name']
+        unique_together = (('name'),)
 
     def __unicode__(self):
         return self.name
@@ -34,14 +41,23 @@ class Department(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=50)
 
+    def natural_key(self):
+        return (self.name)
+
+    class Meta:
+        unique_together = (('name'),)
+
     def __unicode__(self):
         return self.name
 
 class Information_Source(models.Model):
     name = models.CharField(max_length=50)
 
+    def natural_key(self):
+        return (self.name)
+
     class Meta:
-        ordering = ['name']
+        unique_together = (('name'),)
 
     def __unicode__(self):
         return self.name
@@ -49,14 +65,23 @@ class Information_Source(models.Model):
 class Information_classification(models.Model):
     name = models.CharField(max_length=50)
 
+    def natural_key(self):
+        return (self.name)
+
     class Meta:
-        ordering = ['name']
+        unique_together = (('name'),)
 
     def __unicode__(self):
         return self.name
 
 class Event_class(models.Model):
     name = models.CharField(max_length=50)
+
+    def natural_key(self):
+        return (self.name)
+
+    class Meta:
+        unique_together = (('name'),)
 
     def __unicode__(self):
         return self.name
@@ -65,8 +90,11 @@ class Event_class(models.Model):
 class State(models.Model):
     name = models.CharField(max_length=50)
 
+    def natural_key(self):
+        return (self.name)
+
     class Meta:
-        ordering = ['name']
+        unique_together = (('name'),)
 
     def __unicode__(self):
         return self.name

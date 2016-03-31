@@ -1,80 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-<!-- 新 Bootstrap 核心 CSS 文件 -->
-<link rel="stylesheet" href="/static/bootstrap-3.3.5-dist/css/bootstrap.min.css">
-<!-- Bootstrap-table css-->
-<link rel="stylesheet" href="/static/bootstrap-table/1.10.1/dist/bootstrap-table.css">
-<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
-
-<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-<script src="/static/bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
-
-<!-- Bootstrap-table js and zh-CN -->
-<script src="/static/bootstrap-table/1.10.1/dist/bootstrap-table.js"></script>
-<script src="/static/bootstrap-table/1.10.1/dist/locale/bootstrap-table-zh-CN.min.js"></script>
-</head>
+{% extends "base.html" %}
+{% block maincontents %}
 
 
-<body>
-<nav class="navbar navbar-inverse navbar-default">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="/">CKG安全信息系统</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="/">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
+<div class="container">
 
+  <div class="starter-template">
+    <p class="lead">安全信息查询</p>
+  </div>
 
-    <div class="container">
-
-      <div class="starter-template">
-        <h1>AMECO 重庆分公司</h1>
-        <p class="lead">安全信息查询</p>
-      </div>
-
-    </div><!-- /.container -->
-
-    <div class="container">
-    <table data-toggle="table">
-    <thead>
-        <tr>
-            <th>Item ID</th>
-            <th>Item Name</th>
-            <th>Item Price</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>1</td>
-            <td>Item 1</td>
-            <td>$1</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Item 2</td>
-            <td>$2</td>
-        </tr>
-    </tbody>
-</table>
 </div><!-- /.container -->
 
+<div class="container">
+    <table id="table" data-show-columns="true" data-pagination="true" data-page-size="15" data-page-list="[15,30,66,100]" data-show-pagination-switch="true" data-search="true">
+    </table>
+</div><!-- /.container -->
 
-</body>
-</html>
+<script>
+    var $table = $('#table');
+
+    $(function () {
+        
+        data = {{ json_data | safe}};
+
+        columns_attr = new Object();
+        var columns_arr = new Array();
+        for(var key in data[0])
+        {
+            columns_attr = new Object();
+            columns_attr.title = key;
+            columns_attr.field = key;
+            columns_attr.sortable = 'true';
+            columns_arr.push(columns_attr);
+        }
+
+        $table.bootstrapTable({
+            data: data,
+            columns: columns_arr,
+            height: getHeight()
+        });
+
+        $(window).resize(function () {
+            $table.bootstrapTable('resetView', {
+                height: getHeight()
+            });
+        });
+
+    });
+
+    function getHeight() {
+        return $(window).height() - $('h3').outerHeight(true);
+    }
+</script>
+
+{% endblock %}
