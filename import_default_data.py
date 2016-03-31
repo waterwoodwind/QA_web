@@ -57,10 +57,11 @@ def import_model(txt_file,model_object):
     model_object.objects.bulk_create(objectList)
 
 if __name__ == "__main__":
-    #import_location()
-    #import_Time_Bucket()
-    #import_Department()
-    #import_model("Information_Source.txt",Information_Source)
+    import_location()
+    import_Time_Bucket()
+    import_Department()
+    import_model("Information_Source.txt",Information_Source)
     import_model("Information_classification.txt", Information_classification)
     import_model("Event_class.txt", Event_class)
+    import_model("Team.txt", Team)
     print('Done!')
