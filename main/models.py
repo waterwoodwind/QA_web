@@ -100,21 +100,21 @@ class State(models.Model):
         return self.name
 
 class qa_info(models.Model):
-    data = models.DateField('日期')
-    location = models.ForeignKey(Location,verbose_name='地点')
-    time_bucket = models.ForeignKey(Time_Bucket, verbose_name='时间')
-    department = models.ForeignKey(Department, verbose_name='受检单位')
-    team = models.ForeignKey(Team,default = u'无', verbose_name='责任班组')
-    responsible_person = models.CharField(max_length=100, verbose_name='责任人')
-    information_Source = models.ForeignKey(Information_Source, verbose_name='信息来源')
-    information_classification = models.ForeignKey(Information_classification, verbose_name='问题分类')
-    event_class = models.ForeignKey(Event_class, verbose_name='事件等级')
-    problem_description = models.TextField('问题描述')
-    corrective_action = models.TextField('整改措施')
-    treatment_suggestion = models.TextField('处理意见')
-    state = models.ForeignKey(State, verbose_name='关闭情况')
-    scrutator = models.CharField(max_length=100, verbose_name='检查者')
-    Appendix = models.FileField(upload_to='upload/%Y/%m/%d',blank=True, verbose_name='相关附件')
+    data = models.DateField(u'日期')
+    location = models.ForeignKey(Location,verbose_name=u'地点')
+    time_bucket = models.ForeignKey(Time_Bucket, verbose_name=u'时间')
+    department = models.ForeignKey(Department, verbose_name=u'受检单位')
+    team = models.ForeignKey(Team,default = u'无', verbose_name=u'责任班组')
+    responsible_person = models.CharField(max_length=100, verbose_name=u'责任人')
+    information_Source = models.ForeignKey(Information_Source, verbose_name=u'信息来源')
+    information_classification = models.ForeignKey(Information_classification, verbose_name=u'问题分类')
+    event_class = models.ForeignKey(Event_class, verbose_name=u'事件等级')
+    problem_description = models.TextField(u'问题描述')
+    corrective_action = models.TextField(u'整改措施')
+    treatment_suggestion = models.TextField(u'处理意见')
+    state = models.ForeignKey(State, verbose_name=u'关闭情况')
+    scrutator = models.CharField(max_length=100, verbose_name=u'检查者')
+    Appendix = models.FileField(upload_to='upload/%Y/%m/%d',blank=True, verbose_name=u'相关附件')
 
     class Meta:
         ordering = ["data"]

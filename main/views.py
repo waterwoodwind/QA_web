@@ -10,7 +10,13 @@ def home(request):
     upload_data = []
     for item in list_data:
         upload_data.append(item['fields'])
+        print upload_data
+
+    dict_id_verbose_name = {}
+    for field in qa_info._meta.fields:
+        dict_id_verbose_name[field.name] = field.verbose_name
+        print field.name, field.verbose_name
+
 
     upload_data = json.dumps(upload_data)
-
     return render(request, 'home.html',{'json_data': upload_data})
