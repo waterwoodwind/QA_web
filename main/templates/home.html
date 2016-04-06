@@ -10,7 +10,7 @@
 
 </div><!-- /.container -->
 
-<div class="container">
+<div class="container-fluid">
     <table id="table" data-show-columns="true" data-pagination="true" data-page-size="15" data-page-list="[15,30,66,100]" data-show-pagination-switch="true" data-search="true">
     </table>
 </div><!-- /.container -->
@@ -21,21 +21,11 @@
     $(function () {
         
         data = {{ json_data | safe}};
-
-        columns_attr = new Object();
-        var columns_arr = new Array();
-        for(var key in data[0])
-        {
-            columns_attr = new Object();
-            columns_attr.title = key;
-            columns_attr.field = key;
-            columns_attr.sortable = 'true';
-            columns_arr.push(columns_attr);
-        }
-
+        columns_set = {{ json_columns | safe }}
+        
         $table.bootstrapTable({
             data: data,
-            columns: columns_arr,
+            columns: columns_set,
             height: getHeight()
         });
 
