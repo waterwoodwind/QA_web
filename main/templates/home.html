@@ -4,9 +4,9 @@
 
 <div class="container">
 
-  <div class="starter-template">
-    <p class="lead">安全信息查询</p>
-  </div>
+
+    <h1>安全信息查询</h1>
+
 
 </div><!-- /.container -->
 
@@ -22,7 +22,7 @@
         
         data = {{ json_data | safe}};
         columns_set = {{ json_columns | safe }}
-        
+
         $table.bootstrapTable({
             data: data,
             columns: columns_set,

@@ -5,7 +5,7 @@ from django.core import serializers
 import json
 # Create your views here.
 def home(request):
-    exclude_list = [u"检查者", u"ID", u"相关附件"]
+    exclude_list = [u"检查者", u"责任人", u"ID", u"相关附件"]
 
     query_data = qa_info.objects.all()
     json_data = serializers.serialize("json", query_data,use_natural_foreign_keys=True)
@@ -19,11 +19,21 @@ def home(request):
             columns_item = {
                 u"title": field.verbose_name,
                 u"field": field.verbose_name,
-                u"sortable":u"true",
+                #u"sortable": u"true",
             }
+            if field.verbose_name == u"问题描述":
+                columns_item[u"width"] = u"40%"
+                columns_item[u"title"] = u"问题描述"
+            elif field.verbose_name == u"整改措施":
+                columns_item[u"width"] = u"30%"
+            else:
+                split_list = list(field.verbose_name)
+                title_str = u"<br>".join(split_list)
+                columns_item[u"title"] = title_str
+                columns_item[u"width"] = u"2%"
             columns_set.append(columns_item)
-            #print field.name, field.verbose_name
-    print columns_set
+
+
     json_columns = json.dumps(columns_set)
 
 
@@ -34,7 +44,6 @@ def home(request):
 
     chinese_updata = []
     for item in upload_data:
-        print item
         dict_updata = {}
         for key,value in item.items():
             if not dict_name_verbose_name[key] in exclude_list:
