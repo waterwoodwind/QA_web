@@ -11,7 +11,7 @@
 </div><!-- /.container -->
 
 <div class="container-fluid">
-    <table id="table" data-show-columns="true" data-pagination="true" data-page-size="15" data-page-list="[15,30,66,100]" data-show-pagination-switch="true" data-search="true">
+    <table id="table" data-show-columns="true" data-pagination="true" data-page-size="15" data-page-list="[30,66,90,200]" data-show-pagination-switch="true" data-search="true">
     </table>
 </div><!-- /.container -->
 
@@ -26,7 +26,6 @@
         $table.bootstrapTable({
             data: data,
             columns: columns_set,
-            height: getHeight()
         });
 
         $(window).resize(function () {
@@ -37,9 +36,6 @@
 
     });
 
-    function getHeight() {
-        return $(window).height() - $('h3').outerHeight(true);
-    }
     function attachment(value) {
         var the_url;
         if (value == ""){
