@@ -40,6 +40,18 @@
     function getHeight() {
         return $(window).height() - $('h3').outerHeight(true);
     }
+    function attachment(value) {
+        var the_url;
+        if (value == ""){
+            return "无";
+        }
+        else{
+            the_url = "/media/112233/".replace("112233", value);
+            return [
+                '<a href="' + the_url + '" target="_blank">' + "查看" + '</a>'
+            ].join('');
+        }
+    }
 </script>
 
 {% endblock %}

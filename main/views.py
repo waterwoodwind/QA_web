@@ -5,7 +5,7 @@ from django.core import serializers
 import json
 # Create your views here.
 def home(request):
-    exclude_list = [u"检查者", u"责任人", u"ID", u"相关附件"]
+    exclude_list = [u"检查者", u"责任人", u"ID"]
 
     query_data = qa_info.objects.all().order_by('-id')
     json_data = serializers.serialize("json", query_data,use_natural_foreign_keys=True)
@@ -38,7 +38,8 @@ def home(request):
                     title_str = title_str + split_list[i]
                     if (i+1)%2 == 0:
                         title_str = title_str + u"<br>"
-
+                if field.verbose_name == u"相关附件":
+                    columns_item[u'formatter'] = "attachment"
                 columns_item[u"title"] = title_str
                 columns_item[u"width"] = u"2%"
             columns_set.append(columns_item)
