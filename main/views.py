@@ -22,13 +22,23 @@ def home(request):
                 #u"sortable": u"true",
             }
             if field.verbose_name == u"问题描述":
-                columns_item[u"width"] = u"40%"
+                columns_item[u"width"] = u"20%"
                 columns_item[u"title"] = u"问题描述"
             elif field.verbose_name == u"整改措施":
-                columns_item[u"width"] = u"30%"
+                columns_item[u"width"] = u"20%"
+                columns_item[u"title"] = u"整改措施"
+            elif field.verbose_name == u"处理意见":
+                columns_item[u"width"] = u"6%"
+                columns_item[u"title"] = u"处理意见"
             else:
                 split_list = list(field.verbose_name)
-                title_str = u"<br>".join(split_list)
+                # every two word add
+                title_str = ""
+                for i in range(len(split_list)):
+                    title_str = title_str + split_list[i]
+                    if (i+1)%2 == 0:
+                        title_str = title_str + u"<br>"
+
                 columns_item[u"title"] = title_str
                 columns_item[u"width"] = u"2%"
             columns_set.append(columns_item)
