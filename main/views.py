@@ -7,7 +7,7 @@ import json
 def home(request):
     exclude_list = [u"检查者", u"责任人", u"ID"]
 
-    query_data = qa_info.objects.all().order_by('-id')
+    query_data = qa_info.objects.all().order_by('-data')
     json_data = serializers.serialize("json", query_data,use_natural_foreign_keys=True)
     list_data = json.loads(json_data)
 
