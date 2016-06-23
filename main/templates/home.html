@@ -83,7 +83,8 @@ document.addEventListener("DOMContentLoaded", function() {
   };
   
   var exportPlugin = hot.getPlugin('exportFile');
- 
+  hot.getPlugin('filters').addFormula(1, 'eq', ['211']);
+hot.getPlugin('filters').filter();
     
   buttons.file.addEventListener('click', function() {
     exportPlugin.downloadFile('csv', 
