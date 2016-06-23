@@ -13,9 +13,15 @@ def home(request):
 
     dict_name_verbose_name = {}
     columns_set = []
+    colheaders = []
+    dataSchema = {}
     for field in qa_info._meta.fields:
         dict_name_verbose_name[field.name] = field.verbose_name
+
         if not field.verbose_name in exclude_list:
+            print field.verbose_name
+            colheaders.append(field.verbose_name.encode("utf8"))
+            dataSchema[field.verbose_name] = ''
             columns_item = {
                 u"title": field.verbose_name,
                 u"field": field.verbose_name,
@@ -64,7 +70,7 @@ def home(request):
         chinese_updata.append(dict_updata)
 
 
-
+    print colheaders
     upload_data = json.dumps(chinese_updata)
     return render(request, 'home.html',{'json_data': upload_data,
                                         'json_columns': json_columns})
