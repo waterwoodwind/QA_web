@@ -73,47 +73,37 @@ function attachment(value) {
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-
-  var example1 = document.getElementById('example');
+    var example1 = document.getElementById('example');
+    var buttons = {
+        file: document.getElementById('export-file')
+    };
+    var exportPlugin = hot.getPlugin('exportFile');
+    hot.getPlugin('filters').addFormula(0, 'eq', ['211']);
+    hot.getPlugin('filters').filter();
+    buttons.file.addEventListener('click', function() {
+        exportPlugin.downloadFile('csv', {
+                filename: '安全信息',
+                columnHeaders: true,
+            }
+        );
+    });
   
   
-  
-  var buttons = {
-    file: document.getElementById('export-file')
-  };
-  
-  var exportPlugin = hot.getPlugin('exportFile');
-  hot.getPlugin('filters').addFormula(1, 'eq', ['211']);
-hot.getPlugin('filters').filter();
-    
-  buttons.file.addEventListener('click', function() {
-    exportPlugin.downloadFile('csv', 
-        {
-            filename: '安全信息',
-            columnHeaders: true,
+    function bindDumpButton() {
+        if (typeof Handsontable === "undefined") {
+            return;
         }
-    );
-  });
-  
-  
-  function bindDumpButton() {
-      if (typeof Handsontable === "undefined") {
-        return;
-      }
-  
-      Handsontable.Dom.addEvent(document.body, 'click', function (e) {
-  
-        var element = e.target || e.srcElement;
-  
-        if (element.nodeName == "BUTTON" && element.name == 'dump') {
-          var name = element.getAttribute('data-dump');
-          var instance = element.getAttribute('data-instance');
-          var hot = window[instance];
-          console.log('data of ' + name, hot.getData());
-        }
-      });
+        Handsontable.Dom.addEvent(document.body, 'click', function (e) {
+            var element = e.target || e.srcElement;
+            if (element.nodeName == "BUTTON" && element.name == 'dump') {
+                var name = element.getAttribute('data-dump');
+                var instance = element.getAttribute('data-instance');
+                var hot = window[instance];
+                console.log('data of ' + name, hot.getData());
+            }
+        });
     }
-  bindDumpButton();
+    bindDumpButton();
 });
 </script>
 {% endblock %}
