@@ -77,13 +77,15 @@ function attachment(value) {
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    var 
+    var today = new Date();
+    var this_month_first_day = today.setDate(1);
 
     var example1 = document.getElementById('example');
     var buttons = {
         file: document.getElementById('export-file'),
         this_month: document.getElementById('this_month')
     };
+
     var exportPlugin = hot.getPlugin('exportFile');
     hot.getPlugin('filters').addFormula(0, 'between', ['2016-06-14', '2016-06-24']);
     hot.getPlugin('filters').filter();
@@ -95,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function() {
         );
     });
     buttons.this_month.addEventListener('click', function() {
-        hot.getPlugin('filters').addFormula(0, 'between', ['2016-06-01', '2016-06-24']);
+        hot.getPlugin('filters').addFormula(0, 'between', [formatDate(this_month_first_day), formatDate(today)]);
         hot.getPlugin('filters').filter();
     });
   
