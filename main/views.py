@@ -69,8 +69,5 @@ def home(request):
             #print chinese_updata
         chinese_updata.append(dict_updata)
 
-
-    print colheaders
     upload_data = json.dumps(chinese_updata)
-    return render(request, 'home.html',{'json_data': upload_data,
-                                        'json_columns': json_columns})
+    return render(request, 'home.html',{'json_data': upload_data})

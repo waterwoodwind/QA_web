@@ -1,30 +1,23 @@
 {% extends "base.html" %}
 {% block maincontents %}
-
-
-<div class="container" id ="head_title">
-
-
-    <h1>安全信息查询</h1>
-
-
-</div><!-- /.container -->
-
 <div class="container-fluid">
     <button id="today" class="intext-btn">
         今日
     </button>
-    <button id="this_month" class="intext-btn">
+    <button id="yesterday" class="intext-btn">
         昨日
     </button>
-    <button id="this_month" class="intext-btn">
+    <button id="last_7_day" class="intext-btn">
         7日
     </button>
     <button id="this_month" class="intext-btn">
         本月
     </button>
-    <button id="this_month" class="intext-btn">
-        本月
+    <button id="all" class="intext-btn">
+        所有
+    </button>
+    <button id="reset_filter" class="intext-btn">
+        重置筛选
     </button>
     <br>
     <button id="export-file" class="intext-btn">
@@ -34,14 +27,14 @@
     <div id="example"></div>
 </div><!-- /.container -->
 <script>
-var data = {{ json_data | safe}};
+var data = new Array();
+data = {{ json_data | safe}};
 for (var i = 0; i < data.length; i++) {
         data[i]["相关附件"] = attachment(data[i]["相关附件"])
 };
 var container = document.getElementById('example');
 var hot = new Handsontable(container, {
   data: data,
-  dataSchema:{'日期':null, '地点':null, '时间':null, '受检单位':null},
   rowHeaders: true,
   colHeaders: ['日期', '地点', '时间', '受检单位', '责任班组', '信息来源', '问题分类', '事件等级', '问题描述', '整改措施', '处理意见', '关闭情况' , '相关附件'],
   columns: [
@@ -70,7 +63,7 @@ var hot = new Handsontable(container, {
 });
 
 function getHeight() {
-        return $(window).height() - $('h1').outerHeight(true) * 2;
+        return $(window).height() - $('nav').outerHeight(true) * 2;
     }
 
 function attachment(value) {
@@ -91,13 +84,25 @@ function attachment(value) {
 document.addEventListener("DOMContentLoaded", function() {
     var some_day = new Date();
     var str_today = formatDate(some_day);
+    some_day = new Date();
+    some_day.setDate(some_day.getDate()-1);
+    var str_yesterday = formatDate(some_day);
+    some_day = new Date();
+    some_day.setDate(some_day.getDate()-7);
+    var str_last_7_day = formatDate(some_day);
+    some_day = new Date();
     some_day.setDate(1);
     var str_this_month_first_day = formatDate(some_day);
 
     var example1 = document.getElementById('example');
     var buttons = {
+        today: document.getElementById('today'),
+        yesterday: document.getElementById('yesterday'),
+        last_7_day: document.getElementById('last_7_day'),
+        this_month: document.getElementById('this_month'),
         file: document.getElementById('export-file'),
-        this_month: document.getElementById('this_month')
+        all: document.getElementById('all'),
+        reset_filter: document.getElementById('reset_filter')
     };
 
     var exportPlugin = hot.getPlugin('exportFile');
@@ -110,8 +115,28 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         );
     });
+    buttons.today.addEventListener('click', function() {
+        hot.getPlugin('filters').addFormula(0, 'between', [str_today, str_today]);
+        hot.getPlugin('filters').filter();
+    });
+    buttons.yesterday.addEventListener('click', function() {
+        hot.getPlugin('filters').addFormula(0, 'between', [str_yesterday, str_yesterday]);
+        hot.getPlugin('filters').filter();
+    });
+    buttons.last_7_day.addEventListener('click', function() {
+        hot.getPlugin('filters').addFormula(0, 'between', [str_last_7_day, str_today]);
+        hot.getPlugin('filters').filter();
+    });
     buttons.this_month.addEventListener('click', function() {
         hot.getPlugin('filters').addFormula(0, 'between', [str_this_month_first_day, str_today]);
+        hot.getPlugin('filters').filter();
+    });
+    buttons.all.addEventListener('click', function() {
+        hot.getPlugin('filters').removeFormulas(0);
+        hot.getPlugin('filters').filter();
+    });
+    buttons.reset_filter.addEventListener('click', function() {
+        hot.getPlugin('filters').clearFormulas();
         hot.getPlugin('filters').filter();
     });
   
