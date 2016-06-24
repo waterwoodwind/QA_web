@@ -11,6 +11,18 @@
 </div><!-- /.container -->
 
 <div class="container-fluid">
+    <button id="today" class="intext-btn">
+        今日
+    </button>
+    <button id="this_month" class="intext-btn">
+        昨日
+    </button>
+    <button id="this_month" class="intext-btn">
+        7日
+    </button>
+    <button id="this_month" class="intext-btn">
+        本月
+    </button>
     <button id="this_month" class="intext-btn">
         本月
     </button>
@@ -77,8 +89,10 @@ function attachment(value) {
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    var today = new Date();
-    var this_month_first_day = today.setDate(1);
+    var some_day = new Date();
+    var str_today = formatDate(some_day);
+    some_day.setDate(1);
+    var str_this_month_first_day = formatDate(some_day);
 
     var example1 = document.getElementById('example');
     var buttons = {
@@ -97,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function() {
         );
     });
     buttons.this_month.addEventListener('click', function() {
-        hot.getPlugin('filters').addFormula(0, 'between', [formatDate(this_month_first_day), formatDate(today)]);
+        hot.getPlugin('filters').addFormula(0, 'between', [str_this_month_first_day, str_today]);
         hot.getPlugin('filters').filter();
     });
   
