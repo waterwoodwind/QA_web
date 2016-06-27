@@ -20,9 +20,6 @@
         重置筛选
     </button>
     <br>
-    <button id="export-file" class="intext-btn">
-        导出为csv文件
-    </button>
     <br>
     <div id="example"></div>
 </div><!-- /.container -->
@@ -100,7 +97,6 @@ document.addEventListener("DOMContentLoaded", function() {
         yesterday: document.getElementById('yesterday'),
         last_7_day: document.getElementById('last_7_day'),
         this_month: document.getElementById('this_month'),
-        file: document.getElementById('export-file'),
         all: document.getElementById('all'),
         reset_filter: document.getElementById('reset_filter')
     };
@@ -108,13 +104,6 @@ document.addEventListener("DOMContentLoaded", function() {
     var exportPlugin = hot.getPlugin('exportFile');
     hot.getPlugin('filters').addFormula(0, 'between', ['2016-06-14', '2016-06-24']);
     hot.getPlugin('filters').filter();
-    buttons.file.addEventListener('click', function() {
-        exportPlugin.downloadFile('csv', {
-                filename: '安全信息',
-                columnHeaders: true,
-            }
-        );
-    });
     buttons.today.addEventListener('click', function() {
         hot.getPlugin('filters').addFormula(0, 'between', [str_today, str_today]);
         hot.getPlugin('filters').filter();
