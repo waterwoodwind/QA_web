@@ -102,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     var exportPlugin = hot.getPlugin('exportFile');
-    hot.getPlugin('filters').addFormula(0, 'between', ['2016-06-14', '2016-06-24']);
+    hot.getPlugin('filters').addFormula(0, 'between', [str_yesterday, str_today]);
     hot.getPlugin('filters').filter();
     buttons.today.addEventListener('click', function() {
         hot.getPlugin('filters').addFormula(0, 'between', [str_today, str_today]);
