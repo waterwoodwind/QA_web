@@ -73,7 +73,7 @@ def home(request):
     return render(request, 'home.html',{'json_data': upload_data})
 
 def background(request):
-    exclude_list = [u"ID"]
+    exclude_list = []
 
     query_data = qa_info.objects.all().order_by('-data')
     json_data = serializers.serialize("json", query_data, use_natural_foreign_keys=True)
@@ -122,15 +122,16 @@ def background(request):
 
     upload_data = []
     for item in list_data:
-        upload_data.append(item['fields'])
+        single_data = item['fields']
+        single_data[u'id'] = item['pk']
+        upload_data.append(single_data)
         # print upload_data
 
     chinese_updata = []
     for item in upload_data:
         dict_updata = {}
         for key, value in item.items():
-            if not dict_name_verbose_name[key] in exclude_list:
-                dict_updata[dict_name_verbose_name[key]] = value
+            dict_updata[dict_name_verbose_name[key]] = value
 
                 # print chinese_updata
         chinese_updata.append(dict_updata)
