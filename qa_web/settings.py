@@ -80,8 +80,12 @@ WSGI_APPLICATION = 'qa_web.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', #设置为mysql数据库
+        'NAME': 'QA_mysql',  #mysql数据库名
+        'USER': 'root',  #mysql用户名，留空则默认为当前linux用户名
+        'PASSWORD': 'doctor',   #mysql密码
+        'HOST': '',  #留空默认为localhost
+        'PORT': '',  #留空默认为3306端口
     }
 }
 

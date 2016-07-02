@@ -104,7 +104,7 @@ class qa_info(models.Model):
     location = models.ForeignKey(Location,verbose_name=u'地点')
     time_bucket = models.ForeignKey(Time_Bucket, verbose_name=u'时间')
     department = models.ForeignKey(Department, verbose_name=u'受检单位')
-    team = models.ForeignKey(Team,default = u'无', verbose_name=u'责任班组')
+    team = models.ForeignKey(Team, verbose_name=u'责任班组')
     responsible_person = models.CharField(max_length=100, verbose_name=u'责任人')
     information_Source = models.ForeignKey(Information_Source, verbose_name=u'信息来源')
     information_classification = models.ForeignKey(Information_classification, verbose_name=u'问题分类')
