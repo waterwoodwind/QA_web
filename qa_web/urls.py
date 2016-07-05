@@ -22,7 +22,8 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     #mysite
     url(r'^$', 'main.views.home', name='home'),
-    url(r'^background$', 'main.views.background')
+    url(r'^background$', 'main.views.background'),
+    url(r'^source$', 'main.views.source')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

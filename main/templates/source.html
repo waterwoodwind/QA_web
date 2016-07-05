@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block maincontents %}
+<script src="/static/echart-3.2.1/echarts.js"></script>
+<div id="main" style="width: 600px;height:400px;"></div>
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var source = {{ source | safe }};
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+    title : {
+        text: '单位发现问题占比',
+        subtext: '三级监管统计分析',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['质量监管','车间监管','班组自查']
+    },
+    series : [
+        {
+            name: '信息来源',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+            	{value: source['质量监管'], name:'质量监管'},
+                {value: source['车间监管'], name:'车间监管'},
+                {value: source['班组自查'], name:'班组自查'},      
+            ],
+            itemStyle: {
+                normal:{ 
+                    label:{ 
+                       show: true, 
+                       formatter: '{b} : {c} ({d}%)' 
+                    }, 
+                    labelLine :{show:true}
+                }
+            }
+        }
+    ]
+};
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+{% endblock %}
