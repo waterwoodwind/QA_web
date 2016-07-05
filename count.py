@@ -78,9 +78,15 @@ for item in upload_data:
 
 df_data = pd.DataFrame(chinese_updata)
 source = df_data[u"信息来源"].value_counts()
+df_group =df_data.groupby(u"日期")
+df_day_count = df_group.count()
+date_index = ['2016-06-21', '2016-06-22']
+df_day_count.loc[list_a_month].sum()
 
-
-
+df_data = pd.DataFrame(chinese_updata)
+df_da = pd.DataFrame(chinese_updata, index=df_data[u'日期'])
+df_month = df_da.loc[list_a_month]
+df_month[u"信息来源"].value_counts()
 
 
 

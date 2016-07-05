@@ -5,26 +5,27 @@
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
         var source = {{ source | safe }};
+        var title = "{{ title }}";
         var myChart = echarts.init(document.getElementById('main'));
 
         // 指定图表的配置项和数据
         var option = {
-    title : {
-        text: '汇总单位发现问题占比',
-        subtext: '三级监管统计分析',
-        x:'center'
-    },
-    tooltip : {
-        trigger: 'item',
-        formatter: "{a} <br/>{b} : {c} ({d}%)"
-    },
-    legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: ['质量监管','车间监管','班组自查']
-    },
-    series : [
-        {
+	    title : {
+	        text: '单位发现问题占比',
+	        subtext: title,
+	        x:'center'
+	    },
+	    tooltip : {
+	        trigger: 'item',
+	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+	    },
+	    legend: {
+	        orient: 'vertical',
+	        left: 'left',
+	        data: ['质量监管','车间监管','班组自查']
+	    },
+	    series : [
+	        {
             name: '信息来源',
             type: 'pie',
             radius : '55%',
