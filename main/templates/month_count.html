@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block maincontents %}
 <script src="/static/echart-3.2.1/echarts.js"></script>
-<div id="main" style="width: 600px;height:400px;"></div>
+<div id="main" style="width: 900px;height:600px;"></div>
 
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
@@ -22,9 +22,14 @@
     	        left: 'left',
     	        data: ['发现问题数']
     	    },
+            dataZoom:{
+                show:true,
+                realtime:true,
+            },
             xAxis: {
-            type: 'category',
-            data:{{json_month | safe}},
+                type: 'category',
+                data:{{json_month | safe}},
+                name:"月份"
             },
             yAxis:{
                 type:'value',
