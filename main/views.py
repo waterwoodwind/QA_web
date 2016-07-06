@@ -1,5 +1,6 @@
 #coding=utf-8
 from django.shortcuts import render
+from django.http import HttpResponse
 from main.models import qa_info
 from django.core import serializers
 import json
@@ -210,6 +211,7 @@ def source(request):
     return render(request, 'source.html',{'title': title, 'source': source})
 
 def source_month(request):
+    year_month = request.GET.get('value_conf', None)
     exclude_list = [u"检查者", u"责任人", u"ID"]
 
     query_data = qa_info.objects.all().order_by('-data')
@@ -274,7 +276,8 @@ def source_month(request):
 
     df_data = pd.DataFrame(chinese_updata)
     df_da = pd.DataFrame(chinese_updata, index=df_data[u'日期'])
-    end = arrow.Arrow(2016, 5, 25)
+    end = arrow.get(year_month)
+    end = end.replace(day=25)
     start = end.replace(months=-1)
     start = start.replace(day=26)
     print end
@@ -285,4 +288,4 @@ def source_month(request):
     df_month = df_da.loc[list_a_month]
     source = df_month[u"信息来源"].value_counts().to_json()
     title = u'月'
-    return render(request, 'source.html', {'title': title, 'source': source})
+    return HttpResponse(source)
