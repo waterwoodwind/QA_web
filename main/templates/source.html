@@ -56,6 +56,7 @@
 <script type="text/javascript" src="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
 <link rel="stylesheet" media="screen" href="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+<label>单月查询:</label>
 <input size="16" type="text" placeholder="请点击选择月份" readonly class="form_datetime" id="month">
 <script type="text/javascript">
     $(".form_datetime").datetimepicker({
@@ -131,7 +132,7 @@
 
                 },
             error: function(){
-                alert("查询失败");
+                alert("查询失败，该月无数据");
             }
         });
     });
