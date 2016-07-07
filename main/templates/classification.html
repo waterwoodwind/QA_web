@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block maincontents %}
+<script src="/static/echart-3.2.1/echarts.js"></script>
+<div id="main" style="width: 1100px;height:600px;"></div>
+
+<script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        var json_month = {{ json_month | safe }};
+        var json_count = {{ json_count | safe }};
+        // 指定图表的配置项和数据
+        var option = {
+    	    title : {
+    	        text: '问题分类分析',
+    	        subtext: '按月统计',
+    	        x:'center'
+    	    },
+    	    tooltip : {
+    	        trigger: 'item',
+    	        formatter: "{a} <br/>{b} : {c}"
+    	    },
+    	    legend: {
+    	        left: 'right',
+                orient: 'vertical',
+    	        data: json_month,
+                selected: {
+                    // 选中'系列1'
+                    '2016-05': false,
+                    // 不选中'系列2'
+                    '2016-06': false,
+                    "2016-07": true
+                },
+    	    },
+            dataZoom:{
+                show:true,
+                realtime:true,
+            },
+            xAxis: {
+                type: 'category',
+                data:['程序执行', '工卡执行', '工具设备', "维护作风", "现场管理", "维修记录", "生产组织", "器材管理", "其他"],
+                name:"分类"
+            },
+            yAxis:{
+                type:'value',
+                name:"数量"
+            },
+    	    series : {{ json_series | safe}}
+        };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+</script>
+{% endblock %}

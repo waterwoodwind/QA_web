@@ -78,8 +78,10 @@ for item in upload_data:
 
 df_data = pd.DataFrame(chinese_updata)
 df_da = pd.DataFrame(chinese_updata, index=df_data[u'日期'])
-df_group = df_da.groupby(u'日期')
-print df_group.count()
+df_group = df_da.groupby(u'问题分类')
+df_classification =  df_group[u"时间"].count()
+dict_cl = df_classification.to_dict()
+single_month = [dict_cl[u'程序执行'], dict_cl[u'工卡执行'], dict_cl[u'工具设备'], dict_cl[u"维护作风"], dict_cl[u"现场管理"], dict_cl[u"维修记录"], dict_cl[u"生产组织"], dict_cl[u"器材管理"], dict_cl[u"其它"]]
 
 
 

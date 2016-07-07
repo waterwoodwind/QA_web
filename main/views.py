@@ -218,4 +218,78 @@ def month_count(request):
                                                "json_count":json_count})
 
 def classification(request):
-    return render(request, "classification.html")
+    df_data = pd.DataFrame(df_chinese_data())
+    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    string_index = df_data[u'日期']
+    # 计算出起止月份
+    start_day = string_index.min()
+    end_day = string_index.max()
+    start_ar = arrow.get(start_day)
+    end_ar = arrow.get(end_day)
+    if start_ar.day >= 26:
+        number_month = start_ar.month + 1
+    else:
+        number_month = start_ar.month
+    start_month = start_ar.replace(month=number_month)
+    if end_ar.day >= 26:
+        number_month = end_ar.month + 1
+    else:
+        number_month = end_ar.month
+    end_month = end_ar.replace(month=number_month)
+
+    list_month = []
+    list_month_cl_count = {}
+
+    for r in arrow.Arrow.range('month', start_month, end_month):
+        year_month = r.format("YYYY-MM").encode("utf-8")
+        end = arrow.get(r)
+        end = end.replace(day=25)
+        start = end.replace(months=-1)
+        start = start.replace(day=26)
+        list_a_month = []
+        for r in arrow.Arrow.range('day', start, end):
+            a_day = r.format('YYYY-MM-DD')
+            list_a_month.append(a_day)
+        try:
+            df_month = df_da.loc[list_a_month]
+
+            df_month_group = df_month.groupby(u'问题分类')
+            df_cl = df_month_group[u"时间"].count()
+            dict_cl = df_cl.to_dict()
+            single_month = [dict_cl[u'程序执行'], dict_cl[u'工卡执行'], dict_cl[u'工具设备'], dict_cl[u"维护作风"], dict_cl[u"现场管理"],
+                            dict_cl[u"维修记录"], dict_cl[u"生产组织"], dict_cl[u"器材管理"], dict_cl[u"其它"]]
+            single_month = map(lambda x: int(x), single_month)
+
+            list_month.append(year_month)
+            list_month_cl_count[year_month] = single_month
+        except:
+            continue
+
+    series_single_orignal = {
+        "name": '2016-05',
+        "type": 'bar',
+        "data":[21,33,56,89,44,55,66],
+        "itemStyle": {
+            "normal":{
+                "label":{
+                    "show": "true",
+                    "formatter": '{c}'
+                }
+            }
+        }
+    }
+    all_series = []
+    for item, value in list_month_cl_count.items():
+        print item, value
+        series_single = series_single_orignal.copy()
+        series_single["name"] = item
+        series_single["data"] = value
+        print series_single["name"], series_single["data"]
+        all_series.append(series_single)
+        print all_series
+    json_month = json.dumps(list_month)
+    json_count = json.dumps(list_month_cl_count)
+    json_series = json.dumps(all_series)
+    return render(request, "classification.html",{"json_month":json_month,
+                                               "json_count":json_count,
+                                                  "json_series": json_series})
