@@ -291,8 +291,16 @@ def classification(request):
             print series_single["name"], series_single["data"]
             all_series.append(series_single)
             print all_series
+    #获取最后一个元素，控制显示
+    dict_selected = {}
+    for index, list_item in enumerate(list_month_cl_count):
+        for item, value in list_item.items():
+            dict_selected[item] = False
+            if index == (len(list_month_cl_count) - 1):
+                dict_selected[item] = True
+
     json_month = json.dumps(list_month)
-    json_count = json.dumps(list_month_cl_count)
+    json_count = json.dumps(dict_selected)
     json_series = json.dumps(all_series)
     return render(request, "classification.html",{"json_month":json_month,
                                                "json_count":json_count,
