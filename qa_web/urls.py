@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^source$', 'main.views.source'),
     url(r'^source_month$', 'main.views.source_month', name='source_month'),
     url(r'^month_count$', 'main.views.month_count'),
+    url(r'^classification$', 'main.views.classification'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
