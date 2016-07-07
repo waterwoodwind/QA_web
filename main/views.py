@@ -256,6 +256,9 @@ def classification(request):
             df_month_group = df_month.groupby(u'问题分类')
             df_cl = df_month_group[u"时间"].count()
             dict_cl = df_cl.to_dict()
+            list_cl_name = [u'程序执行', u'工卡执行', u'工具设备', u"维护作风", u"现场管理", u"维修记录", u"生产组织", u"器材管理", u"其它"]
+            for item in list_cl_name:
+                dict_cl.setdefault(item, 0)
             single_month = [dict_cl[u'程序执行'], dict_cl[u'工卡执行'], dict_cl[u'工具设备'], dict_cl[u"维护作风"], dict_cl[u"现场管理"],
                             dict_cl[u"维修记录"], dict_cl[u"生产组织"], dict_cl[u"器材管理"], dict_cl[u"其它"]]
             single_month = map(lambda x: int(x), single_month)
