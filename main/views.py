@@ -8,6 +8,9 @@ import pandas as pd
 import arrow
 # Create your views here.
 def home(request):
+    return render(request, "home.html")
+
+def index(request):
     exclude_list = [u"检查者", u"责任人", u"ID"]
 
     query_data = qa_info.objects.all().order_by('-data')
@@ -73,7 +76,7 @@ def home(request):
         chinese_updata.append(dict_updata)
 
     upload_data = json.dumps(chinese_updata)
-    return render(request, 'home.html',{'json_data': upload_data})
+    return render(request, 'index.html',{'json_data': upload_data})
 
 def df_chinese_data():
     exclude_list = []
