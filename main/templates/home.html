@@ -1,14 +1,31 @@
 {% extends "base.html" %}
 {% block maincontents %}
 <div class="jumbotron">
-  <h1>欢迎</h1>
-  <p>本系统为质量安全信息，具有查询及统计功能</p>
-  <p>建议使用现代化内核的浏览器，例如360浏览器、QQ浏览器</p>
-  <P>如遇数据空白，请刷新页面</P>
-  <p><a class="btn btn-primary btn-lg" href="/index" role="button">详细记录</a></p>
-  <p><a class="btn btn-primary btn-lg" href="/source" role="button">来源统计</a></p>
-  <p><a class="btn btn-primary btn-lg" href="/month_count" role="button">月度统计</a></p>
-  <p><a class="btn btn-primary btn-lg" href="/classification" role="button">分类统计</a></p>
+  <h1 class="text-center"><div class="thumbnail"><small>安全信息统计分析系统</small></div></h1>
+  <br>
+
+<div class="row">
+		<div class="col-xs-1 col-md-1">
+		</div>
+        <div class="col-xs-1 col-md-3">
+        	<a class="btn btn-primary btn-lg" href="/index" role="button">详细记录</a>
+        </div>
+        <div class="col-xs-1 col-md-3">
+        	<a class="btn btn-primary btn-lg" href="/source" role="button">来源统计</a>
+        </div>
+        <div class="col-xs-1 col-md-3">
+        	<a class="btn btn-primary btn-lg" href="/month_count" role="button">月度统计</a>
+        </div>
+        <div class="col-xs-1 col-md-1">
+        	<a class="btn btn-primary btn-lg" href="/classification" role="button">分类统计</a>
+        </div>
+  </p>
+  
+  </div>
+  </div>
+
+  <P class="text-right">如遇数据空白，请刷新页面，建议使用浏览器：360浏览器、QQ浏览器、搜狗浏览器</P>
+
 </div>
 
 {% endblock %}
