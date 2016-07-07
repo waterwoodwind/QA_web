@@ -238,7 +238,7 @@ def classification(request):
     end_month = end_ar.replace(month=number_month)
 
     list_month = []
-    list_month_cl_count = {}
+    list_month_cl_count = []
 
     for r in arrow.Arrow.range('month', start_month, end_month):
         year_month = r.format("YYYY-MM").encode("utf-8")
@@ -261,7 +261,7 @@ def classification(request):
             single_month = map(lambda x: int(x), single_month)
 
             list_month.append(year_month)
-            list_month_cl_count[year_month] = single_month
+            list_month_cl_count.append({year_month : single_month})
         except:
             continue
 
@@ -279,14 +279,15 @@ def classification(request):
         }
     }
     all_series = []
-    for item, value in list_month_cl_count.items():
-        print item, value
-        series_single = series_single_orignal.copy()
-        series_single["name"] = item
-        series_single["data"] = value
-        print series_single["name"], series_single["data"]
-        all_series.append(series_single)
-        print all_series
+    for list_item in list_month_cl_count:
+        for item, value in list_item.items():
+            print item, value
+            series_single = series_single_orignal.copy()
+            series_single["name"] = item
+            series_single["data"] = value
+            print series_single["name"], series_single["data"]
+            all_series.append(series_single)
+            print all_series
     json_month = json.dumps(list_month)
     json_count = json.dumps(list_month_cl_count)
     json_series = json.dumps(all_series)
