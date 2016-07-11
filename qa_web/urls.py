@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     #mysite
     url(r'^$', 'main.views.home', name='home'),
-    url(r'index$', 'main.views.index'),
+    url(r'information$', 'main.views.information'),
     url(r'^background$', 'main.views.background'),
     url(r'^source$', 'main.views.source'),
     url(r'^source_month$', 'main.views.source_month', name='source_month'),
