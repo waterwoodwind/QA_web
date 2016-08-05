@@ -184,6 +184,8 @@ def month_count(request):
     end_day = string_index.max()
     start_ar = arrow.get(start_day)
     end_ar = arrow.get(end_day)
+    print end_ar
+
     if start_ar.day >= 26:
         number_month = start_ar.month + 1
     else:
@@ -192,8 +194,9 @@ def month_count(request):
     if end_ar.day >= 26:
         number_month = end_ar.month + 1
     else:
-        number_month = end_ar.month
-    end_month = end_ar.replace(month=number_month)
+        number_month = end_ar.month + 1
+    end_month = end_ar.replace(months=number_month)
+    print end_month
 
     list_month = []
     list_month_count = []
@@ -237,7 +240,7 @@ def classification(request):
     if end_ar.day >= 26:
         number_month = end_ar.month + 1
     else:
-        number_month = end_ar.month
+        number_month = end_ar.month + 1
     end_month = end_ar.replace(month=number_month)
 
     list_month = []
