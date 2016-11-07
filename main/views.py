@@ -311,3 +311,8 @@ def classification(request):
     return render(request, "classification.html",{"json_month":json_month,
                                                "json_count":json_count,
                                                   "json_series": json_series})
+
+
+def person_count(request):
+
+    return render(request, "person_count.html")
