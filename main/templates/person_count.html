@@ -20,7 +20,10 @@ var hot = new Handsontable(container, {
   colWidths: [65, 65],
   filters: true,
   height: getHeight(),
-  columnSorting: true,
+  columnSorting: {
+    column: 1,
+    sortOrder: false
+  }
 });
 
 function getHeight() {
