@@ -1,48 +1,31 @@
 {% extends "base.html" %}
 {% block maincontents %}
-<script src="/static/echart-3.2.1/echarts.js"></script>
-<div id="main" style="width: 1100px;height:600px;"></div>
+<div class="container-fluid">
+    <div id="example" style="width:210px"></div>
+</div><!-- /.container -->
+<script>
+var data = new Array();
+data = {{ json_data | safe}};
+var container = document.getElementById('example');
+var hot = new Handsontable(container, {
+  data: data,
+  rowHeaders: true,
+  colHeaders: ['责任人', '次数'],
+  columns: [
+      {data: '责任人'},
+      {data: '次数'},
+    ],
+  dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+  readOnly: true,
+  colWidths: [65, 65],
+  filters: true,
+  height: getHeight(),
+  columnSorting: true,
+});
 
-<script type="text/javascript">
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'));
-        var json_month = {{ json_month | safe }};
-        var json_count = {{ json_count | safe }};
-        // 指定图表的配置项和数据
-        var option = {
-    	    title : {
-    	        text: '问题分类分析',
-    	        subtext: '按月统计',
-    	        x:'center'
-    	    },
-    	    tooltip : {
-    	        trigger: 'item',
-    	        formatter: "{a} <br/>{b} : {c}"
-    	    },
-    	    legend: {
-    	        left: 'right',
-                orient: 'vertical',
-    	        data: json_month,
-                selected: json_count,
-    	    },
-            dataZoom:{
-                show:true,
-                realtime:true,
-            },
-            xAxis: {
-                type: 'category',
-                data:['程序执行', '工卡执行', '工具设备', "维护作风", "现场管理", "维修记录", "生产组织", "器材管理", "其他"],
-                name:"分类"
-            },
-            yAxis:{
-                type:'value',
-                name:"数量"
-            },
-    	    series : {{ json_series | safe}}
-        };
+function getHeight() {
+        return $(window).height() - $('nav').outerHeight(true) * 2;
+    }
 
-
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
 </script>
 {% endblock %}

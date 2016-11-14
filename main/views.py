@@ -6,6 +6,7 @@ from django.core import serializers
 import json
 import pandas as pd
 import arrow
+import re
 # Create your views here.
 def home(request):
     return render(request, "home.html")
@@ -314,5 +315,26 @@ def classification(request):
 
 
 def person_count(request):
+    df_data = pd.DataFrame(df_chinese_data())
+    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_person = df_da[u'责任人']
+    #chinese_name = u'([/u4e00-/u9fa5]+)'
+    #pattern = re.compile(chinese_name)
+    res_dict = {}
+    for item in df_person.values:
+        #print item
+        results = re.findall(ur"[\u4e00-\u9fa5]+", item)
+        for result in results:
+            #print result
+            res_dict[result] = res_dict.get(result, 0) + 1
+    person_count_list = res_dict.items()
+    print person_count_list
+    json_list = []
 
-    return render(request, "person_count.html")
+    for item in person_count_list:
+        single_dict = {}
+        single_dict[u'责任人'] = item[0]
+        single_dict[u'次数'] = item[1]
+        json_list.append(single_dict)
+    json_list = json.dumps(json_list)
+    return render(request, "person_count.html", {'json_data': json_list})
