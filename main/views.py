@@ -336,5 +336,25 @@ def person_count(request):
         single_dict[u'责任人'] = item[0]
         single_dict[u'次数'] = item[1]
         json_list.append(single_dict)
-    json_list = json.dumps(json_list)
-    return render(request, "person_count.html", {'json_data': json_list})
+    json_person = json.dumps(json_list)
+    #检查者
+    df_scrutator = df_da[u"检查者"]
+    res_dict = {}
+    for item in df_scrutator.values:
+        # print item
+        results = re.findall(ur"[\u4e00-\u9fa5]+", item)
+        for result in results:
+            # print result
+            res_dict[result] = res_dict.get(result, 0) + 1
+    scrutator_count_list = res_dict.items()
+
+    json_list = []
+
+    for item in scrutator_count_list:
+        single_dict = {}
+        single_dict[u'检查者'] = item[0]
+        single_dict[u'次数'] = item[1]
+        json_list.append(single_dict)
+    json_scrutator = json.dumps(json_list)
+    return render(request, "person_count.html", {'json_person': json_person,
+                                                 'json_scrutator':json_scrutator})
