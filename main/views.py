@@ -315,6 +315,13 @@ def classification(request):
 
 
 def person_count(request):
+    if request.method == 'POST':
+        post_data = request.POST
+        date_range = post_data["date_range"]
+        date_start = date_range.split(' to ')[0]
+        date_end = date_range.split(' to ')[1]
+        print date_range
+
     df_data = pd.DataFrame(df_chinese_data())
     df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
     df_person = df_da[u'责任人']
