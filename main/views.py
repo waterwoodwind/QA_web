@@ -326,6 +326,9 @@ def person_count(request):
     else:
         df_data = pd.DataFrame(df_chinese_data())
 
+    if df_data.empty:
+        return HttpResponse(u"该时间范围内无数据，请返回上一页")
+
     df_da = df_data
     df_person = df_da[u'责任人']
     #chinese_name = u'([/u4e00-/u9fa5]+)'
