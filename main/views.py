@@ -320,10 +320,13 @@ def person_count(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        print date_range
+        df_index = pd.date_range(date_start, date_end)
+        print date_start,date_end
+        df_data = pd.DataFrame(date_range_df_chinese_data(date_start,date_end))
+    else:
+        df_data = pd.DataFrame(df_chinese_data())
 
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_da = df_data
     df_person = df_da[u'责任人']
     #chinese_name = u'([/u4e00-/u9fa5]+)'
     #pattern = re.compile(chinese_name)
@@ -365,3 +368,70 @@ def person_count(request):
     json_scrutator = json.dumps(json_list)
     return render(request, "person_count.html", {'json_person': json_person,
                                                  'json_scrutator':json_scrutator})
+
+
+def date_range_df_chinese_data(date_start, date_end):
+    exclude_list = []
+
+    query_data = qa_info.objects.filter(data__range=[date_start, date_end]).order_by('-data')
+    json_data = serializers.serialize("json", query_data, use_natural_foreign_keys=True)
+    list_data = json.loads(json_data)
+
+    dict_name_verbose_name = {}
+    columns_set = []
+    colheaders = []
+    dataSchema = {}
+    for field in qa_info._meta.fields:
+        dict_name_verbose_name[field.name] = field.verbose_name
+
+        if not field.verbose_name in exclude_list:
+            print field.verbose_name
+            colheaders.append(field.verbose_name.encode("utf8"))
+            dataSchema[field.verbose_name] = ''
+            columns_item = {
+                u"title": field.verbose_name,
+                u"field": field.verbose_name,
+                # u"sortable": u"true",
+            }
+            if field.verbose_name == u"问题描述":
+                columns_item[u"width"] = u"20%"
+                columns_item[u"title"] = u"问题描述"
+            elif field.verbose_name == u"整改措施":
+                columns_item[u"width"] = u"20%"
+                columns_item[u"title"] = u"整改措施"
+            elif field.verbose_name == u"处理意见":
+                columns_item[u"width"] = u"6%"
+                columns_item[u"title"] = u"处理意见"
+            else:
+                split_list = list(field.verbose_name)
+                # every two word add
+                title_str = ""
+                for i in range(len(split_list)):
+                    title_str = title_str + split_list[i]
+                    if (i + 1) % 2 == 0:
+                        title_str = title_str + u"<br>"
+                if field.verbose_name == u"相关附件":
+                    columns_item[u'formatter'] = "attachment"
+                columns_item[u"title"] = title_str
+                columns_item[u"width"] = u"2%"
+            columns_set.append(columns_item)
+
+    json_columns = json.dumps(columns_set)
+
+    upload_data = []
+    for item in list_data:
+        single_data = item['fields']
+        single_data[u'id'] = item['pk']
+        upload_data.append(single_data)
+        # print upload_data
+
+    chinese_updata = []
+    for item in upload_data:
+        dict_updata = {}
+        for key, value in item.items():
+            dict_updata[dict_name_verbose_name[key]] = value
+
+            # print chinese_updata
+        chinese_updata.append(dict_updata)
+
+    return chinese_updata

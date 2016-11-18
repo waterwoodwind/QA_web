@@ -42,7 +42,7 @@
                                 //minDate: '01/01/2012',    //最小时间
                                 maxDate : moment(), //最大时间 
                                 dateLimit : {
-                                    days : 180
+                                    days : 360
                                 }, //起止时间的最大间隔
                                 showDropdowns : true,
                                 showWeekNumbers : false, //是否显示第几周
@@ -109,10 +109,7 @@
                document.getElementById("daterange_query").submit()
            });
         })
-</script>
 
-
-<script>
 var data = new Array();
 data = {{ json_person | safe}};
 var container = document.getElementById('example');
