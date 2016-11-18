@@ -4,6 +4,26 @@
 <div id="main" style="width: 900px;height:600px;"></div>
 
 <script type="text/javascript">
+        var count_data = {{json_count | safe}};
+        var mean_data = new Array();
+        for (var i = 0;i<count_data.length;i++){
+            var sum = 0;
+            for (var j = 0;j<=i;j++){
+                sum = sum + count_data[j];
+            }
+            mean = sum/(i+1);
+            mean_data.push(mean);
+        }
+        mean_data.pop();
+        console.log(mean_data);
+        var static_down = mean_data.map(function (item){
+            return item - 3 * Math.sqrt(item);
+                    });
+        var static_up = mean_data.map(function (item){
+            return 6 * Math.sqrt(item);
+        });
+        console.log(static_down);
+        console.log(static_up);
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
 
@@ -36,6 +56,34 @@
                 name:"数量"
             },
     	    series : [
+                {
+                    name: 'L',
+                    type: 'line',
+                    data: static_down,
+                    lineStyle: {
+                        normal: {
+                            opacity: 0
+                        }
+                    },
+                    stack: 'confidence-band',
+                    symbol: 'none'
+                }, {
+                    name: 'U',
+                    type: 'line',
+                    data: static_up,
+                    lineStyle: {
+                        normal: {
+                            opacity: 0
+                        }
+                    },
+                    areaStyle: {
+                        normal: {
+                            color: '#ccc'
+                        }
+                    },
+                    stack: 'confidence-band',
+                    symbol: 'none'
+                },
     	        {
                     name: '发现问题数',
                     type: 'line',
