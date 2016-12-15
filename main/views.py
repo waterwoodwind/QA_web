@@ -341,15 +341,19 @@ def person_count(request):
             #print result
             res_dict[result] = res_dict.get(result, 0) + 1
     person_count_list = res_dict.items()
-    print person_count_list
     json_list = []
 
     for item in person_count_list:
         single_dict = {}
+        # 去掉人员名单中的无
+        if item[0] == u'无':
+            print item[0], item[1]
+            continue
         single_dict[u'责任人'] = item[0]
         single_dict[u'次数'] = item[1]
         json_list.append(single_dict)
     json_person = json.dumps(json_list)
+
     #检查者
     df_scrutator = df_da[u"检查者"]
     res_dict = {}
@@ -365,6 +369,10 @@ def person_count(request):
 
     for item in scrutator_count_list:
         single_dict = {}
+        # 去掉人员名单中的无
+        if item[0] == u'无':
+            print item[0], item[1]
+            continue
         single_dict[u'检查者'] = item[0]
         single_dict[u'次数'] = item[1]
         json_list.append(single_dict)
