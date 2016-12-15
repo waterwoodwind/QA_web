@@ -17,13 +17,17 @@
         mean_data.pop();
         console.log(mean_data);
         var static_down = mean_data.map(function (item){
-            return item - 3 * Math.sqrt(item);
-                    });
-        var static_up = mean_data.map(function (item){
-            return 6 * Math.sqrt(item);
+            return parseInt(item - 3 * Math.sqrt(item));
         });
-        console.log(static_down);
-        console.log(static_up);
+        var static_up = mean_data.map(function (item){
+            return parseInt(6 * Math.sqrt(item));
+        });
+        //用于上限的数值显示
+        var static_up_value = static_down.map(function (item, i){
+            return item + static_up[i];
+        });
+        //console.log(static_down);
+        //console.log(static_up);
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('main'));
 
@@ -66,7 +70,12 @@
                         }
                     },
                     stack: 'confidence-band',
-                    symbol: 'none'
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
                 }, {
                     name: 'U',
                     type: 'line',
@@ -82,7 +91,16 @@
                         }
                     },
                     stack: 'confidence-band',
-                    symbol: 'none'
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top',
+                            //显示上限的真实值
+                            formatter: function (params) {
+                                    return static_up_value[params['dataIndex']];
+                            }
+                        }
+                    },
                 },
     	        {
                     name: '发现问题数',
