@@ -39,7 +39,8 @@
     	        x:'center'
     	    },
     	    tooltip : {
-    	        trigger: 'item',
+                show: false,
+    	        trigger: 'axis',
     	        formatter: "{a} <br/>{b} : {c}"
     	    },
     	    legend: {
@@ -61,7 +62,7 @@
             },
     	    series : [
                 {
-                    name: 'L',
+                    name: '下线',
                     type: 'line',
                     data: static_down,
                     lineStyle: {
@@ -77,7 +78,7 @@
                         }
                     },
                 }, {
-                    name: 'U',
+                    name: '上线',
                     type: 'line',
                     data: static_up,
                     lineStyle: {
