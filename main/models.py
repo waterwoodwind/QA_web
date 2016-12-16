@@ -109,7 +109,7 @@ class qa_info(models.Model):
     information_Source = models.ForeignKey(Information_Source, verbose_name=u'信息来源')
     information_classification = models.ForeignKey(Information_classification, verbose_name=u'问题分类')
     event_class = models.ForeignKey(Event_class, verbose_name=u'事件等级')
-    problem_description = models.TextField(u'问题描述')
+    problem_description = models.TextField(verbose_name = u'问题描述', unique_for_date = 'data')
     corrective_action = models.TextField(u'整改措施')
     treatment_suggestion = models.TextField(u'处理意见')
     state = models.ForeignKey(State, verbose_name=u'关闭情况')
