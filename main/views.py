@@ -173,7 +173,8 @@ def source_month(request):
         list_a_month.append(a_day)
     df_month = df_da.loc[list_a_month]
     source = df_month[u"信息来源"].value_counts().to_json()
-    title = u'月'
+    print source
+    print type(source)
     return HttpResponse(source)
 
 def month_count(request):

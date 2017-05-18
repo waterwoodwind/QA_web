@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block maincontents %}
+<script src="/static/echart-3.2.1/echarts.js"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.zh-CN.js"></script>
+<link rel="stylesheet" media="screen" href="/static/bootstrap-datetimepicker/bootstrap-datetimepicker.css">
+<label>单月查询:</label>
+<input size="16" type="text" placeholder="请点击选择月份" readonly class="form_datetime" id="month">
+<script type="text/javascript">
+    $(".form_datetime").datetimepicker({
+        format: 'yyyy-mm',
+        startView: 'year',
+        minView: "year", //选择日期后，不会再跳转去选择时分秒 
+        language: 'zh-CN', //汉化 
+        autoclose: true //选择日期后自动关闭
+    });
+    
+    $('.form_datetime').datetimepicker().on('changeDate', function(ev){
+        var year_month = document.getElementById("month").value
+        console.log(year_month);
+        $.ajax({
+            type:"GET",
+            data: {
+                value_conf:year_month, 
+            },
+            url: "{% url 'ajax_source_month_stack' %}", //后台处理函数的url 这里用的是static url 需要与urls.py中的name一致
+            cache: false,
+            dataType: "json",
+            beforeSend: function () {
+            },
+            success: function(get_result, statues, xml){
+                console.log(get_result);
+                var source = get_result;
+        
+            var myChart = echarts.init(document.getElementById('month_pie'));
+
+            // 指定图表的配置项和数据
+            var option = {
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    data:['班组自查','车间监管','质量监管']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['航线一','航线二','定检']
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'班组自查',
+                        type:'bar',
+                        stack: '广告',
+                        data:[source[["班组自查","航线一"]],source[["班组自查","航线二"]],source[["班组自查","定检"]]]
+                    },
+                    {
+                        name:'车间监管',
+                        type:'bar',
+                        stack: '广告',
+                        data:[220, 182, 191]
+                    },
+                    {
+                        name:'质量监管',
+                        type:'bar',
+                        stack: '广告',
+                        data:[150, 232, 201]
+                    },
+                ]
+            };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+
+                    },
+                error: function(){
+                    alert("查询失败，该月无数据");
+                }
+        });
+    });
+
+</script>
+<div id="month_pie" style="width: 600px;height:400px;"></div>
+{% endblock %}
