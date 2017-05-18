@@ -9,6 +9,14 @@ import arrow
 import re
 
 from views import df_chinese_data
+
+
+def numpy_to_int(dict_np):
+    for key,item in dict_np.items():
+        dict_np[key] = int(item)
+
+    return dict_np
+
 # Create your views here.
 def source_month_stack(request):
     return render(request, 'source_month_stack.html')
@@ -28,14 +36,16 @@ def ajax_source_month_stack(request):
         a_day = r.format('YYYY-MM-DD')
         list_a_month.append(a_day)
     df_month = df_da.loc[list_a_month]
-    df_group = df_month[u'受检单位'].groupby(df_month[u'信息来源']).value_counts().to_json()
-    print df_group
-    print type(df_group)
-    '''
-    team = df_month[u'受检单位'][df_month[u'信息来源']==u"班组自查"].value_counts().to_json()
-    quality = df_month[u'受检单位'][df_month[u'信息来源']==u"车间监管"].value_counts().to_json()
-    workshop = df_month[u'受检单位'][df_month[u'信息来源']==u"质量监管"].value_counts().to_json()
+
+    team = df_month[u'受检单位'][df_month[u'信息来源']==u"班组自查"].value_counts().to_dict()
+    quality = df_month[u'受检单位'][df_month[u'信息来源']==u"车间监管"].value_counts().to_dict()
+    workshop = df_month[u'受检单位'][df_month[u'信息来源']==u"质量监管"].value_counts().to_dict()
+    team = numpy_to_int(team)
+    quality = numpy_to_int(quality)
+    workshop = numpy_to_int(workshop)
+    
     json_data = {'team':team, 'quality': quality, 'workshop':workshop}
     json_data = json.dumps(json_data)
-    '''
-    return HttpResponse(df_group)
+
+
+    return HttpResponse(json_data)

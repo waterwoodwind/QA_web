@@ -67,19 +67,19 @@
                         name:'班组自查',
                         type:'bar',
                         stack: '广告',
-                        data:[source[["班组自查","航线一"]],source[["班组自查","航线二"]],source[["班组自查","定检"]]]
+                        data:[source["team"]["航线一"],source["team"]["航线二"],source["team"]["定检"]]
                     },
                     {
                         name:'车间监管',
                         type:'bar',
                         stack: '广告',
-                        data:[220, 182, 191]
+                        data:[source["workshop"]["航线一"],source["workshop"]["航线二"],source["workshop"]["定检"]]
                     },
                     {
                         name:'质量监管',
                         type:'bar',
                         stack: '广告',
-                        data:[150, 232, 201]
+                        data:[source["quality"]["航线一"],source["quality"]["航线二"],source["quality"]["定检"]]
                     },
                 ]
             };
