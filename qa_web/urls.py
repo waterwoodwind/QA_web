@@ -33,6 +33,8 @@ urlpatterns = [
     url(r'^month_count_group_by_department$', 'main.views.month_count_group_by_department'),
     url(r'^source_month_stack$', 'main.high_views.source_month_stack'),
     url(r'^ajax_source_month_stack$', 'main.high_views.ajax_source_month_stack', name='ajax_source_month_stack'),
+    url(r'^team_month_stack$', 'main.high_views.team_month_stack'),
+    url(r'^ajax_team_month_stack$', 'main.high_views.ajax_team_month_stack', name='ajax_team_month_stack'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
