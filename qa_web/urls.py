@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^ajax_source_month_stack$', 'main.high_views.ajax_source_month_stack', name='ajax_source_month_stack'),
     url(r'^team_month_stack$', 'main.high_views.team_month_stack'),
     url(r'^ajax_team_month_stack$', 'main.high_views.ajax_team_month_stack', name='ajax_team_month_stack'),
+    url(r'^self_inspect_trendence$','main.high_views.self_inspect_trendence')
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

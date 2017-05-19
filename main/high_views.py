@@ -83,3 +83,66 @@ def ajax_team_month_stack(request):
 
 
     return HttpResponse(json_data)
+
+
+def self_inspect_trendence(request):
+    df_data = pd.DataFrame(df_chinese_data())
+    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    string_index = df_data[u'日期']
+    # 计算出起止月份
+    start_day = string_index.min()
+    end_day = string_index.max()
+    start_ar = arrow.get(start_day)
+    end_ar = arrow.get(end_day)
+    print end_ar
+
+    if start_ar.day >= 26:
+        number_month = start_ar.month + 1
+    else:
+        number_month = start_ar.month
+    start_month = start_ar.replace(month=number_month)
+    if end_ar.day >= 26:
+        number_month = end_ar.month + 1
+    else:
+        number_month = end_ar.month + 1
+    end_month = end_ar.replace(months=number_month)
+    print end_month
+
+    list_month = []
+    list_month_airline_1_1 = []
+    list_month_airline_percent_1_1 = []
+
+    for r in arrow.Arrow.range('month', start_month, end_month):
+        year_month = r.format("YYYY-MM")
+        end = arrow.get(r)
+        end = end.replace(day=25)
+        start = end.replace(months=-1)
+        start = start.replace(day=26)
+        list_a_month = []
+        for r in arrow.Arrow.range('day', start, end):
+            a_day = r.format('YYYY-MM-DD')
+            list_a_month.append(a_day)
+        try:
+            df_month = df_da.loc[list_a_month]
+            list_month.append(year_month)
+            df_month_airline_1 = df_month[df_month[u'责任班组']==u'航线一（1）']
+            total_count = df_month_airline_1.shape[0]
+
+            list_month_airline_1_1.append(total_count)
+            df_month_self_inspect_count = df_month_airline_1[df_month_airline_1[u'信息来源']==u'班组自查']
+            print df_month_self_inspect_count.describe()
+            print type(df_month_self_inspect_count)
+            self_inspect_count = df_month_self_inspect_count.shape[0]
+            print df_month_self_inspect_count.shape
+            percent = 100*self_inspect_count/total_count
+            print percent
+            list_month_airline_percent_1_1.append(percent)
+        except:
+            continue
+
+    json_month = json.dumps(list_month)
+    json_count = json.dumps(list_month_airline_1_1)
+    json_percent = json.dumps(list_month_airline_percent_1_1)
+    return render(request, 'self_inspect_trendence.html',{"json_month":json_month,
+                                                            "json_count":json_count,
+                                                          "json_percent":json_percent})
