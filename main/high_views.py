@@ -85,7 +85,11 @@ def ajax_team_month_stack(request):
     return HttpResponse(json_data)
 
 
-def self_inspect_trendence(request):
+def self_inspect_trendence(request, workshop_name):
+    if workshop_name == "1":
+        list_team_name = [u'航线一（1）', u'航线一（2）', u'航线一（3）', u'航线一（4）']
+    else:
+        list_team_name = [u'航线二（1）', u'航线二（2）', u'航线二（3）', u'航线二（4）']
     df_data = pd.DataFrame(df_chinese_data())
     df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
     string_index = df_data[u'日期']
@@ -109,9 +113,10 @@ def self_inspect_trendence(request):
     print end_month
 
     list_month = []
-    list_month_airline_1_1 = []
-    list_month_airline_percent_1_1 = []
 
+    dict_data = {}
+    for item in list_team_name:
+        dict_data[item] = { 'total': [],'percent':[]}
     for r in arrow.Arrow.range('month', start_month, end_month):
         year_month = r.format("YYYY-MM")
         end = arrow.get(r)
@@ -125,24 +130,20 @@ def self_inspect_trendence(request):
         try:
             df_month = df_da.loc[list_a_month]
             list_month.append(year_month)
-            df_month_airline_1 = df_month[df_month[u'责任班组']==u'航线一（1）']
-            total_count = df_month_airline_1.shape[0]
-
-            list_month_airline_1_1.append(total_count)
-            df_month_self_inspect_count = df_month_airline_1[df_month_airline_1[u'信息来源']==u'班组自查']
-            print df_month_self_inspect_count.describe()
-            print type(df_month_self_inspect_count)
-            self_inspect_count = df_month_self_inspect_count.shape[0]
-            print df_month_self_inspect_count.shape
-            percent = 100*self_inspect_count/total_count
-            print percent
-            list_month_airline_percent_1_1.append(percent)
+            for item in list_team_name:
+                df_month_airline_1 = df_month[df_month[u'责任班组']==item]
+                total_count = df_month_airline_1.shape[0]
+                dict_data[item]['total'].append(total_count)
+                df_month_self_inspect_count = df_month_airline_1[df_month_airline_1[u'信息来源']==u'班组自查']
+                self_inspect_count = df_month_self_inspect_count.shape[0]
+                percent = 100*self_inspect_count/total_count
+                dict_data[item]['percent'].append(percent)
         except:
             continue
 
     json_month = json.dumps(list_month)
-    json_count = json.dumps(list_month_airline_1_1)
-    json_percent = json.dumps(list_month_airline_percent_1_1)
+    json_team_name = json.dumps(list_team_name)
+    json_data = json.dumps(dict_data)
     return render(request, 'self_inspect_trendence.html',{"json_month":json_month,
-                                                            "json_count":json_count,
-                                                          "json_percent":json_percent})
+                                                            "json_team_name":json_team_name,
+                                                          "json_data":json_data})

@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 {% block maincontents %}
 <script src="/static/echart-3.2.1/echarts.js"></script>
-<div id="main" style="width: 900px;height:600px;"></div>
+<div id="main" style="width: 1200px;height:800px;"></div>
 
 <script type="text/javascript">
         // 基于准备好的dom，初始化echarts实例
+        var get_data = {{ json_data | safe}}
         var myChart = echarts.init(document.getElementById('main'));
-
+        var array_team_name = {{ json_team_name | safe}}
         // 指定图表的配置项和数据
         var option = {
     	    title : {
     	        text: '单位发现问题',
-    	        subtext: '每月统计',
     	        x:'center'
     	    },
     	    tooltip : {
@@ -23,27 +23,103 @@
     	        left: 'left',
     	        data: ['发现问题数','自查占比']
     	    },
-            dataZoom:{
-                show:true,
+            dataZoom: {
+                show: true,
                 realtime:true,
+                xAxisIndex: [0,1,2,3],
             },
-            xAxis: {
+            grid: [
+                {x: '7%', y: '7%', width: '38%', height: '38%'},
+                {x2: '7%', y: '7%', width: '38%', height: '38%'},
+                {x: '7%', y2: '7%', width: '38%', height: '38%'},
+                {x2: '7%', y2: '7%', width: '38%', height: '38%'}
+            ],
+            xAxis: [{
                 type: 'category',
                 data:{{json_month | safe}},
-                name:"月份"
-            },
+                name:array_team_name[0],
+                nameGap: 30,
+                nameLocation: 'middle',
+                gridIndex: 0
+            },{
+                type: 'category',
+                data:{{json_month | safe}},
+                name:array_team_name[1],
+                nameGap: 30,
+                nameLocation: 'middle',
+                gridIndex: 1
+            },{
+                type: 'category',
+                data:{{json_month | safe}},
+                name:array_team_name[2],
+                nameGap: 30,
+                nameLocation: 'middle',
+                gridIndex: 2
+            },{
+                type: 'category',
+                data:{{json_month | safe}},
+                name:array_team_name[3],
+                nameGap: 30,
+                nameLocation: 'middle',
+                gridIndex: 3
+            }],
             yAxis:[
-                {
+                {   
                     type:'value',
-                    name:"数量"
+                    gridIndex: 0
                 },
                 {
                     type:'value',
                     show:false,
-                    name:"数量",
                     min: 0,
                     max: 150,
                     interval: 5,
+                    gridIndex: 0,
+                    axisLabel: {
+                        formatter: '{value} %'
+                    }
+                },
+                {   
+                    type:'value',
+                    gridIndex: 1
+                },
+                {
+                    type:'value',
+                    show:false,
+                    min: 0,
+                    max: 150,
+                    interval: 5,
+                    gridIndex: 1,
+                    axisLabel: {
+                        formatter: '{value} %'
+                    }
+                },
+                {   
+                    type:'value',
+                    gridIndex: 2
+                },
+                {
+                    type:'value',
+                    show:false,
+                    min: 0,
+                    max: 150,
+                    interval: 5,
+                    gridIndex: 2,
+                    axisLabel: {
+                        formatter: '{value} %'
+                    }
+                },
+                {   
+                    type:'value',
+                    gridIndex: 3
+                },
+                {
+                    type:'value',
+                    show:false,
+                    min: 0,
+                    max: 150,
+                    interval: 5,
+                    gridIndex: 3,
                     axisLabel: {
                         formatter: '{value} %'
                     }
@@ -54,7 +130,9 @@
                     name: '发现问题数',
                     type: 'line',
                     center: ['50%', '60%'],
-                    data:{{json_count | safe}},
+                    data:get_data[array_team_name[0]]['total'],
+                    xAxisIndex: 0,
+                    yAxisIndex: 0,
                     itemStyle: {
                         normal:{ 
                             label:{ 
@@ -68,9 +146,10 @@
                 {
                     name: '自查占比',
                     type: 'line',
+                    xAxisIndex: 0,
                     yAxisIndex: 1,
                     center: ['50%', '60%'],
-                    data:{{json_percent | safe}},
+                    data:get_data[array_team_name[0]]['percent'],
                     itemStyle: {
                         normal:{ 
                             label:{ 
@@ -80,7 +159,109 @@
                             labelLine :{show:true}
                         }
                     }
-                }
+                },
+                {
+                    name: '发现问题数',
+                    type: 'line',
+                    center: ['50%', '60%'],
+                    data:get_data[array_team_name[1]]['total'],
+                    xAxisIndex: 1,
+                    yAxisIndex: 2,
+                    itemStyle: {
+                        normal:{ 
+                            label:{ 
+                               show: true, 
+                               formatter: '{c}' 
+                            }, 
+                            labelLine :{show:true}
+                        }
+                    }
+                },
+                {
+                    name: '自查占比',
+                    type: 'line',
+                    xAxisIndex: 1,
+                    yAxisIndex: 3,
+                    center: ['50%', '60%'],
+                    data:get_data[array_team_name[1]]['percent'],
+                    itemStyle: {
+                        normal:{ 
+                            label:{ 
+                               show: true, 
+                               formatter: '{c} %' 
+                            }, 
+                            labelLine :{show:true}
+                        }
+                    }
+                },
+                {
+                    name: '发现问题数',
+                    type: 'line',
+                    center: ['50%', '60%'],
+                    data:get_data[array_team_name[2]]['total'],
+                    xAxisIndex: 2,
+                    yAxisIndex: 4,
+                    itemStyle: {
+                        normal:{ 
+                            label:{ 
+                               show: true, 
+                               formatter: '{c}' 
+                            }, 
+                            labelLine :{show:true}
+                        }
+                    }
+                },
+                {
+                    name: '自查占比',
+                    type: 'line',
+                    xAxisIndex: 2,
+                    yAxisIndex: 5,
+                    center: ['50%', '60%'],
+                    data:get_data[array_team_name[2]]['percent'],
+                    itemStyle: {
+                        normal:{ 
+                            label:{ 
+                               show: true, 
+                               formatter: '{c} %' 
+                            }, 
+                            labelLine :{show:true}
+                        }
+                    }
+                },
+                {
+                    name: '发现问题数',
+                    type: 'line',
+                    center: ['50%', '60%'],
+                    data:get_data[array_team_name[3]]['total'],
+                    xAxisIndex: 3,
+                    yAxisIndex: 6,
+                    itemStyle: {
+                        normal:{ 
+                            label:{ 
+                               show: true, 
+                               formatter: '{c}' 
+                            }, 
+                            labelLine :{show:true}
+                        }
+                    }
+                },
+                {
+                    name: '自查占比',
+                    type: 'line',
+                    xAxisIndex: 3,
+                    yAxisIndex: 7,
+                    center: ['50%', '60%'],
+                    data:get_data[array_team_name[3]]['percent'],
+                    itemStyle: {
+                        normal:{ 
+                            label:{ 
+                               show: true, 
+                               formatter: '{c} %' 
+                            }, 
+                            labelLine :{show:true}
+                        }
+                    }
+                },
             ]
         };
 
