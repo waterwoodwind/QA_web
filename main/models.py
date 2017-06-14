@@ -115,6 +115,7 @@ class qa_info(models.Model):
     state = models.ForeignKey(State, verbose_name=u'关闭情况')
     scrutator = models.CharField(max_length=100, verbose_name=u'检查者')
     Appendix = models.FileField(upload_to='upload/%Y/%m/%d',blank=True, verbose_name=u'相关附件')
+    grade = models.DecimalField(max_digits=1, decimal_places=0,verbose_name = u'评分', blank= True)
 
     class Meta:
         ordering = ["data"]
