@@ -37,7 +37,7 @@ var container = document.getElementById('example');
 var hot = new Handsontable(container, {
   data: data,
   rowHeaders: true,
-  colHeaders: ['日期', '地点', '时间', '受检单位', '责任班组', '责任人', '检查者', '信息来源', '问题分类', '事件等级', '问题描述', '整改措施', '处理意见', '关闭情况' , '相关附件', '评分', '操作'],
+  colHeaders: ['日期', '地点', '时间', '受检单位', '责任班组', '责任人', '检查者', '信息来源', '问题分类', '事件等级', '问题描述', '整改措施', '处理意见', '关闭情况' , '相关附件', '严重程度', '操作'],
   columns: [
         {data: '日期',
         type: 'date',
@@ -57,7 +57,7 @@ var hot = new Handsontable(container, {
         {data: '关闭情况'},
         {data: '相关附件',
         renderer: 'html',},
-        {data: '评分'},
+        {data: '严重程度'},
         {data: 'ID',
         renderer: 'html',},
     ],
