@@ -4,7 +4,7 @@
 <div id="main" style="width: 900px;height:600px;"></div>
 
 <script type="text/javascript">
-        var count_data = {{json_count | safe}};
+        //var count_data = {{json_count | safe}};
         //console.log(static_down);
         //console.log(static_up);
         // 基于准备好的dom，初始化echarts实例
@@ -13,7 +13,7 @@
         // 指定图表的配置项和数据
         var option = {
     	    title : {
-    	        text: '单位发现问题',
+    	        text: '严重程度散点图',
     	        subtext: '每月统计',
     	        x:'center'
     	    },
@@ -24,16 +24,15 @@
     	    },
     	    legend: {
     	        left: 'left',
-    	        data: ['发现问题数']
+    	        data: ['其它','航线一']
     	    },
             dataZoom:{
                 show:true,
                 realtime:true,
             },
             xAxis: {
-                type: 'category',
-                data:{{json_month | safe}},
-                name:"月份"
+                type: 'time',
+                name:"日期"
             },
             yAxis:{
                 type:'value',
@@ -41,61 +40,20 @@
             },
     	    series : [
                 {
-                    name: '下线',
-                    type: 'line',
-                    data: static_down,
-                    lineStyle: {
-                        normal: {
-                            opacity: 0
-                        }
-                    },
-                    stack: 'confidence-band',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top'
-                        }
-                    },
-                }, {
-                    name: '上线',
-                    type: 'line',
-                    data: static_up,
-                    lineStyle: {
-                        normal: {
-                            opacity: 0
-                        }
-                    },
-                    areaStyle: {
-                        normal: {
-                            color: '#ccc'
-                        }
-                    },
-                    stack: 'confidence-band',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top',
-                            //显示上限的真实值
-                            formatter: function (params) {
-                                    return static_up_value[params['dataIndex']];
-                            }
-                        }
-                    },
+                    name: '其它',
+                    type: 'scatter',
+                    data: [
+                            ["2017-06-18", 1],
+                            ["2017-06-19", 2],
+                            ["2017-06-20", 3],
+                            ["2017-06-21", 4],
+                            ["2017-06-22", 5],
+                        ]
                 },
-    	        {
-                    name: '发现问题数',
-                    type: 'line',
-                    center: ['50%', '60%'],
-                    data:{{json_count | safe}},
-                    itemStyle: {
-                        normal:{ 
-                            label:{ 
-                               show: true, 
-                               formatter: '{c}' 
-                            }, 
-                            labelLine :{show:true}
-                        }
-                    }
+                {
+                    name: '航线一',
+                    type: 'scatter',
+                    data: [],
                 }
             ]
         };
