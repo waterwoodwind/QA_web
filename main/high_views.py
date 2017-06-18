@@ -151,5 +151,6 @@ def self_inspect_trendence(request, workshop_name):
 def grade_scatter(request):
     df_data = pd.DataFrame(df_chinese_data())
     df_data = df_data[df_data[u"严重程度"]>0]
+    df_data = df_data[[u"日期",u"责任班组",u"严重程度"]]
     print df_data
     return render(request, 'grade_scatter.html')
