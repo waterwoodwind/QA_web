@@ -147,3 +147,9 @@ def self_inspect_trendence(request, workshop_name):
     return render(request, 'self_inspect_trendence.html',{"json_month":json_month,
                                                             "json_team_name":json_team_name,
                                                           "json_data":json_data})
+
+def grade_scatter(request):
+    df_data = pd.DataFrame(df_chinese_data())
+    df_data = df_data[df_data[u"严重程度"]>0]
+    print df_data
+    return render(request, 'grade_scatter.html')
