@@ -24,7 +24,7 @@
     	    },
     	    legend: {
     	        left: 'left',
-    	        data: ['其它','航线一']
+    	        data: ['其它','航线一','航线二','定检']
     	    },
             dataZoom:{
                 show:true,
@@ -42,18 +42,22 @@
                 {
                     name: '其它',
                     type: 'scatter',
-                    data: [
-                            ["2017-06-18", 1],
-                            ["2017-06-19", 2],
-                            ["2017-06-20", 3],
-                            ["2017-06-21", 4],
-                            ["2017-06-22", 5],
-                        ]
+                    data: {{ json_other | safe}},
                 },
                 {
                     name: '航线一',
                     type: 'scatter',
-                    data: [],
+                    data: {{ json_airline_1 | safe}},
+                },
+                {
+                    name: '航线二',
+                    type: 'scatter',
+                    data: {{ json_airline_2 | safe}},
+                },
+                {
+                    name: '定检',
+                    type: 'scatter',
+                    data: {{ json_certain | safe}},
                 }
             ]
         };

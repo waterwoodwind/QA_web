@@ -151,6 +151,16 @@ def self_inspect_trendence(request, workshop_name):
 def grade_scatter(request):
     df_data = pd.DataFrame(df_chinese_data())
     df_data = df_data[df_data[u"严重程度"]>0]
-    df_data = df_data[[u"日期",u"责任班组",u"严重程度"]]
-    print df_data
-    return render(request, 'grade_scatter.html')
+    df_data = df_data[[u"日期",u"受检单位",u"严重程度"]]
+    df_airline_1 = df_data[df_data[u"受检单位"]==u"航线一"]
+    json_airline_1 = df_airline_1[[u"日期",u"严重程度"]].to_json(orient="values")
+    df_airline_2 = df_data[df_data[u"受检单位"]==u"航线二"]
+    json_airline_2 = df_airline_2[[u"日期",u"严重程度"]].to_json(orient="values")
+    df_certain = df_data[df_data[u"受检单位"]==u"定检"]
+    json_certain = df_certain[[u"日期",u"严重程度"]].to_json(orient="values")
+    df_other = df_data[(df_data[u"受检单位"]<>u"航线一")&(df_data[u"受检单位"]<>u"航线二")&(df_data[u"受检单位"]<>u"定检")]
+    json_other = df_other[[u"日期",u"严重程度"]].to_json(orient="values")
+    return render(request, 'grade_scatter.html',{"json_airline_1": json_airline_1,
+                                                 "json_airline_2":json_airline_2,
+                                                 "json_certain":json_certain,
+                                                 "json_other":json_other})
