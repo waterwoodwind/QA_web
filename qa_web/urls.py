@@ -18,25 +18,29 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 
+from main import views as low_views
+from main import high_views
+from django.views.decorators.cache import cache_page
+
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
+    (url(r'^admin/', include(admin.site.urls))),
     #mysite
-    url(r'^$', 'main.views.home', name='home'),
-    url(r'information$', 'main.views.information'),
+    (url(r'^$', cache_page(60*60*24)(low_views.home), name='home')),
+    url(r'^information$', cache_page(60*60*24)(low_views.information)),
     url(r'^background$', 'main.views.background'),
-    url(r'^source$', 'main.views.source'),
-    url(r'^source_month$', 'main.views.source_month', name='source_month'),
-    url(r'^month_count$', 'main.views.month_count'),
-    url(r'^classification$', 'main.views.classification'),
-    url(r'^person_count/$', 'main.views.person_count'),
-    url(r'^month_count_group_by_source$', 'main.views.month_count_group_by_source'),
-    url(r'^month_count_group_by_department$', 'main.views.month_count_group_by_department'),
-    url(r'^source_month_stack$', 'main.high_views.source_month_stack'),
-    url(r'^ajax_source_month_stack$', 'main.high_views.ajax_source_month_stack', name='ajax_source_month_stack'),
-    url(r'^team_month_stack$', 'main.high_views.team_month_stack'),
-    url(r'^ajax_team_month_stack$', 'main.high_views.ajax_team_month_stack', name='ajax_team_month_stack'),
-    url(r'^self_inspect_trendence/(\d{1,2})/$','main.high_views.self_inspect_trendence'),
-    url(r'^grade_scatter/$','main.high_views.grade_scatter'),
+    url(r'^source$', cache_page(60*60*24)(low_views.source)),
+    url(r'^source_month$', cache_page(60*60*24)(low_views.source_month), name='source_month'),
+    url(r'^month_count$', cache_page(60*60*24)(low_views.month_count)),
+    url(r'^classification$', cache_page(60*60*24)(low_views.classification)),
+    url(r'^person_count/$', cache_page(60*60*24)(low_views.person_count)),
+    url(r'^month_count_group_by_source$', cache_page(60*60*24)(low_views.month_count_group_by_source)),
+    url(r'^month_count_group_by_department$', cache_page(60*60*24)(low_views.month_count_group_by_department)),
+    url(r'^source_month_stack$', cache_page(60*60*24)(high_views.source_month_stack)),
+    url(r'^ajax_source_month_stack$', cache_page(60*60*24)(high_views.ajax_source_month_stack), name='ajax_source_month_stack'),
+    url(r'^team_month_stack$', cache_page(60*60*24)(high_views.team_month_stack)),
+    url(r'^ajax_team_month_stack$', cache_page(60*60*24)(high_views.ajax_team_month_stack), name='ajax_team_month_stack'),
+    url(r'^self_inspect_trendence/(\d{1,2})/$',cache_page(60*60*24)(high_views.self_inspect_trendence)),
+    url(r'^grade_scatter/$',cache_page(60*60*24)(high_views.grade_scatter)),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
