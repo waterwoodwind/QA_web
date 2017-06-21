@@ -63,7 +63,7 @@ def home(request):
     if df_data.empty:
         return HttpResponse(u"该时间范围内无数据，请返回上一页")
 
-    df_data = pd.DataFrame(df_chinese_data())
+
     air1_dep = make_scrutator_json(df_data, u"航线一", u"车间监管")
     air1_team = make_scrutator_json(df_data, u"航线一", u"班组自查")
     air2_dep = make_scrutator_json(df_data, u"航线二", u"车间监管")
