@@ -3,7 +3,7 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="col-xs-3">
-            <form id="daterange_query" action="/person_count/" method="post" role="form">
+            <form id="daterange_query" action="" method="post" role="form">
                 {% csrf_token %}        
                 <label class="control-label">
                 时间范围：
@@ -18,14 +18,41 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-3">
-            <div id="scrutator" style="width:210px"></div>
+        	航线一车间
+            <div id="air1_dep" style="width:210px"></div>
         </div>
         <div class="col-xs-6">
-            <div id="example" style="width:210px"></div>
+        	航线一班组
+            <div id="air1_team" style="width:210px"></div>
         </div>
     </div>
 </div>
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-3">
+        	航线二车间
+            <div id="air2_dep" style="width:210px"></div>
+        </div>
+        <div class="col-xs-6">
+        	航线二班组
+            <div id="air2_team" style="width:210px"></div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-3">
+        	定检车间
+            <div id="certain_dep" style="width:210px"></div>
+        </div>
+        <div class="col-xs-6">
+        	定检班组
+            <div id="certain_team" style="width:210px"></div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript" src="/static/daterangepicker/moment.js"></script>
 <script type="text/javascript" src="/static/daterangepicker/daterangepicker-1.3.7.js"></script>
@@ -111,14 +138,125 @@
            });
         })
 
-var data = new Array();
-
-
-var scrutator_data = new Array();
-scrutator_data = {{ json_scrutator | safe}};
-var container_scrutator = document.getElementById('scrutator');
+var air1_dep_data = new Array();
+air1_dep_data = {{ air1_dep | safe}};
+var container_scrutator = document.getElementById('air1_dep');
 var hot_scrutator = new Handsontable(container_scrutator,{
-    data: scrutator_data,
+    data: air1_dep_data,
+  rowHeaders: true,
+  colHeaders: ['检查者', '次数'],
+  columns: [
+      {data: '检查者'},
+      {data: '次数'},
+    ],
+  dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+  readOnly: true,
+  colWidths: [65, 65],
+  filters: true,
+  height: getHeight(),
+  columnSorting: {
+    column: 1,
+    sortOrder: false
+  }
+});
+
+var air1_team_data = new Array();
+air1_team_data = {{ air1_team | safe}};
+var container_scrutator = document.getElementById('air1_team');
+var hot_scrutator = new Handsontable(container_scrutator,{
+    data: air1_team_data,
+  rowHeaders: true,
+  colHeaders: ['检查者', '次数'],
+  columns: [
+      {data: '检查者'},
+      {data: '次数'},
+    ],
+  dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+  readOnly: true,
+  colWidths: [65, 65],
+  filters: true,
+  height: getHeight(),
+  columnSorting: {
+    column: 1,
+    sortOrder: false
+  }
+});
+
+
+var air2_dep_data = new Array();
+air2_dep_data = {{ air2_dep | safe}};
+var container_scrutator = document.getElementById('air2_dep');
+var hot_scrutator = new Handsontable(container_scrutator,{
+    data: air2_dep_data,
+  rowHeaders: true,
+  colHeaders: ['检查者', '次数'],
+  columns: [
+      {data: '检查者'},
+      {data: '次数'},
+    ],
+  dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+  readOnly: true,
+  colWidths: [65, 65],
+  filters: true,
+  height: getHeight(),
+  columnSorting: {
+    column: 1,
+    sortOrder: false
+  }
+});
+
+
+var air2_team_data = new Array();
+air2_team_data = {{ air2_team | safe}};
+var container_scrutator = document.getElementById('air2_team');
+var hot_scrutator = new Handsontable(container_scrutator,{
+    data: air2_team_data,
+  rowHeaders: true,
+  colHeaders: ['检查者', '次数'],
+  columns: [
+      {data: '检查者'},
+      {data: '次数'},
+    ],
+  dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+  readOnly: true,
+  colWidths: [65, 65],
+  filters: true,
+  height: getHeight(),
+  columnSorting: {
+    column: 1,
+    sortOrder: false
+  }
+});
+
+
+var certain_dep_data = new Array();
+certain_dep_data = {{ certain_dep | safe}};
+var container_scrutator = document.getElementById('certain_dep');
+var hot_scrutator = new Handsontable(container_scrutator,{
+    data: certain_dep_data,
+  rowHeaders: true,
+  colHeaders: ['检查者', '次数'],
+  columns: [
+      {data: '检查者'},
+      {data: '次数'},
+    ],
+  dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+  readOnly: true,
+  colWidths: [65, 65],
+  filters: true,
+  height: getHeight(),
+  columnSorting: {
+    column: 1,
+    sortOrder: false
+  }
+});
+
+
+var certain_team_data = new Array();
+certain_team_data = {{ certain_team | safe}};
+var container_scrutator = document.getElementById('certain_team');
+var hot_scrutator = new Handsontable(container_scrutator,{
+    data: certain_team_data,
   rowHeaders: true,
   colHeaders: ['检查者', '次数'],
   columns: [
@@ -137,7 +275,7 @@ var hot_scrutator = new Handsontable(container_scrutator,{
 });
 
 function getHeight() {
-        return $(window).height() - $('nav').outerHeight(true) * 2;
+        return 500;
     }
 
 </script>

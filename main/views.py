@@ -7,11 +7,10 @@ import json
 import pandas as pd
 import arrow
 import re
-# Create your views here.
-def home(request):
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = df_data[(df_data[u"受检单位"] == u"航线一")& \
-                    (df_data[u"信息来源"] == u"车间监管")]
+# Create functions here.
+def make_scrutator_json(df_data, department, source):
+    df_da = df_data[(df_data[u"受检单位"] == department)& \
+                    (df_data[u"信息来源"] == source)]
     df_person = df_da[u'责任人']
     #chinese_name = u'([/u4e00-/u9fa5]+)'
     #pattern = re.compile(chinese_name)
@@ -46,7 +45,38 @@ def home(request):
         single_dict[u'次数'] = item[1]
         json_list.append(single_dict)
     json_scrutator = json.dumps(json_list)
-    return render(request, "home.html", {'json_scrutator':json_scrutator})
+    return json_scrutator
+
+# Create your views here.
+def home(request):
+    if request.method == 'POST':
+        post_data = request.POST
+        date_range = post_data["date_range"]
+        date_start = date_range.split(' to ')[0]
+        date_end = date_range.split(' to ')[1]
+        df_index = pd.date_range(date_start, date_end)
+        print date_start,date_end
+        df_data = pd.DataFrame(date_range_df_chinese_data(date_start,date_end))
+    else:
+        df_data = pd.DataFrame(df_chinese_data())
+
+    if df_data.empty:
+        return HttpResponse(u"该时间范围内无数据，请返回上一页")
+
+    df_data = pd.DataFrame(df_chinese_data())
+    air1_dep = make_scrutator_json(df_data, u"航线一", u"车间监管")
+    air1_team = make_scrutator_json(df_data, u"航线一", u"班组自查")
+    air2_dep = make_scrutator_json(df_data, u"航线二", u"车间监管")
+    air2_team = make_scrutator_json(df_data, u"航线二", u"班组自查")
+    certain_dep = make_scrutator_json(df_data, u"定检", u"车间监管")
+    certain_team = make_scrutator_json(df_data, u"定检", u"班组自查")
+    return render(request, "home.html", {'air1_dep': air1_dep,
+                                         'air1_team': air1_team,
+                                         'air2_dep':air2_dep,
+                                         'air2_team':air2_team,
+                                         'certain_dep':certain_dep,
+                                         'certain_team':certain_team
+                                         })
 
 def information(request):
     exclude_list = [u"检查者", u"ID"]
