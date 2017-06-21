@@ -9,7 +9,44 @@ import arrow
 import re
 # Create your views here.
 def home(request):
-    return render(request, "home.html")
+    df_data = pd.DataFrame(df_chinese_data())
+    df_da = df_data[(df_data[u"受检单位"] == u"航线一")& \
+                    (df_data[u"信息来源"] == u"车间监管")]
+    df_person = df_da[u'责任人']
+    #chinese_name = u'([/u4e00-/u9fa5]+)'
+    #pattern = re.compile(chinese_name)
+    res_dict = {}
+    for item in df_person.values:
+        #print item
+        results = re.findall(ur"[\u4e00-\u9fa5]+", item)
+        for result in results:
+            #print result
+            res_dict[result] = res_dict.get(result, 0) + 1
+
+    #检查者
+    df_scrutator = df_da[u"检查者"]
+    res_dict = {}
+    for item in df_scrutator.values:
+        # print item
+        results = re.findall(ur"[\u4e00-\u9fa5]+", item)
+        for result in results:
+            # print result
+            res_dict[result] = res_dict.get(result, 0) + 1
+    scrutator_count_list = res_dict.items()
+
+    json_list = []
+
+    for item in scrutator_count_list:
+        single_dict = {}
+        # 去掉人员名单中的无
+        if item[0] == u'无':
+            print item[0], item[1]
+            continue
+        single_dict[u'检查者'] = item[0]
+        single_dict[u'次数'] = item[1]
+        json_list.append(single_dict)
+    json_scrutator = json.dumps(json_list)
+    return render(request, "home.html", {'json_scrutator':json_scrutator})
 
 def information(request):
     exclude_list = [u"检查者", u"ID"]
