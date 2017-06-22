@@ -47,6 +47,53 @@ def make_scrutator_json(df_data, department, source):
     json_scrutator = json.dumps(json_list)
     return json_scrutator
 
+def make_month_count_json():
+    df_data = pd.DataFrame(df_chinese_data())
+    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    string_index = df_data[u'日期']
+    # 计算出起止月份
+    start_day = string_index.min()
+    end_day = string_index.max()
+    start_ar = arrow.get(start_day)
+    end_ar = arrow.get(end_day)
+    print end_ar
+
+    if start_ar.day >= 26:
+        number_month = start_ar.month + 1
+    else:
+        number_month = start_ar.month
+    start_month = start_ar.replace(month=number_month)
+    if end_ar.day >= 26:
+        number_month = end_ar.month + 1
+    else:
+        number_month = end_ar.month + 1
+    end_month = end_ar.replace(months=number_month)
+    print end_month
+
+    list_month = []
+    list_month_count = []
+
+    for r in arrow.Arrow.range('month', start_month, end_month):
+        year_month = r.format("YYYY-MM")
+        end = arrow.get(r)
+        end = end.replace(day=25)
+        start = end.replace(months=-1)
+        start = start.replace(day=26)
+        list_a_month = []
+        for r in arrow.Arrow.range('day', start, end):
+            a_day = r.format('YYYY-MM-DD')
+            list_a_month.append(a_day)
+        try:
+            df_month = df_da.loc[list_a_month]
+            list_month.append(year_month)
+            list_month_count.append(df_month[u'日期'].count())
+        except:
+            continue
+
+    json_month = json.dumps(list_month)
+    json_count = json.dumps(list_month_count)
+    return json_month, json_count
+
 # Create your views here.
 def home(request):
     if request.method == 'POST':
@@ -70,13 +117,17 @@ def home(request):
     air2_team = make_scrutator_json(df_data, u"航线二", u"班组自查")
     certain_dep = make_scrutator_json(df_data, u"定检", u"车间监管")
     certain_team = make_scrutator_json(df_data, u"定检", u"班组自查")
+
+    #
+    json_month, json_count = make_month_count_json()
     return render(request, "home.html", {'air1_dep': air1_dep,
                                          'air1_team': air1_team,
                                          'air2_dep':air2_dep,
                                          'air2_team':air2_team,
                                          'certain_dep':certain_dep,
-                                         'certain_team':certain_team
-                                         })
+                                         'certain_team':certain_team,
+                                         "json_month":json_month,
+                                        "json_count":json_count})
 
 def information(request):
     exclude_list = [u"检查者", u"ID"]
@@ -261,9 +312,9 @@ def month_count(request):
         number_month = start_ar.month
     start_month = start_ar.replace(month=number_month)
     if end_ar.day >= 26:
-        number_month = end_ar.month + 1
+        number_month = end_ar.month
     else:
-        number_month = end_ar.month + 1
+        number_month = end_ar.month
     end_month = end_ar.replace(months=number_month)
     print end_month
 

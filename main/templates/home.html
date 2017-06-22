@@ -1,57 +1,194 @@
 {% extends "base.html" %}
 {% block maincontents %}
-<div class="container-fluid">
-    <div class="row-fluid">
-        <div class="col-xs-3">
-            <form id="daterange_query" action="" method="post" role="form">
-                {% csrf_token %}        
-                <label class="control-label">
-                时间范围：
-                </label>
-                <input id="reportrange" class="form-control" name="date_range" placeholder="请点击选择">
-            </form>
-            <br>
-        </div>
+
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">单位发现问题</h3>
+	</div>
+	<div class="panel-body">
+		<script src="/static/echart-3.2.1/echarts.js"></script>
+		<div id="main" style="width: 900px;height:300px;"></div>
+
+		<script type="text/javascript">
+        var count_data = {{json_count | safe}};
+        var mean_data = new Array();
+        for (var i = 0;i<count_data.length;i++){
+            var sum = 0;
+            for (var j = 0;j<=i;j++){
+                sum = sum + count_data[j];
+            }
+            mean = sum/(i+1);
+            mean_data.push(mean);
+        }
+        mean_data.pop();
+        console.log(mean_data);
+        var static_down = mean_data.map(function (item){
+            return parseInt(item - 3 * Math.sqrt(item));
+        });
+        var static_up = mean_data.map(function (item){
+            return parseInt(6 * Math.sqrt(item));
+        });
+        //用于上限的数值显示
+        var static_up_value = static_down.map(function (item, i){
+            return item + static_up[i];
+        });
+        //console.log(static_down);
+        //console.log(static_up);
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+    	    title : {
+    	        text: '单位发现问题',
+    	        subtext: '每月统计',
+    	        x:'center'
+    	    },
+    	    tooltip : {
+                show: false,
+    	        trigger: 'axis',
+    	        formatter: "{a} <br/>{b} : {c}"
+    	    },
+    	    legend: {
+    	        left: 'left',
+    	        data: ['发现问题数']
+    	    },
+            dataZoom:{
+                show:true,
+                realtime:true,
+                start: 50,
+                end: 95
+            },
+            xAxis: {
+                type: 'category',
+                data:{{json_month | safe}},
+                name:"月份"
+            },
+            yAxis:{
+                type:'value',
+                name:"数量",
+                min:100,
+                max:240,
+            },
+    	    series : [
+                {
+                    name: '下线',
+                    type: 'line',
+                    data: static_down,
+                    lineStyle: {
+                        normal: {
+                            opacity: 0
+                        }
+                    },
+                    stack: 'confidence-band',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top'
+                        }
+                    },
+                }, {
+                    name: '上线',
+                    type: 'line',
+                    data: static_up,
+                    lineStyle: {
+                        normal: {
+                            opacity: 0
+                        }
+                    },
+                    areaStyle: {
+                        normal: {
+                            color: '#ccc'
+                        }
+                    },
+                    stack: 'confidence-band',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'top',
+                            //显示上限的真实值
+                            formatter: function (params) {
+                                    return static_up_value[params['dataIndex']];
+                            }
+                        }
+                    },
+                },
+    	        {
+                    name: '发现问题数',
+                    type: 'line',
+                    center: ['50%', '60%'],
+                    data:{{json_count | safe}},
+                    itemStyle: {
+                        normal:{ 
+                            label:{ 
+                               show: true, 
+                               formatter: '{c}' 
+                            }, 
+                            labelLine :{show:true}
+                        }
+                    }
+                }
+            ]
+        };
+
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+		</script>
+	</div>
+</div>
+
+<div class="panel panel-success">
+	<div class="panel-heading">
+		<h3 class="panel-title">
+			检查者
+		</h3>
+	</div>
+	<div class="panel-body">
+	    <div class="row">
+	        <div class="col-xs-3">
+	            <form id="daterange_query" action="" method="post" role="form">
+	                {% csrf_token %}        
+	                <label class="control-label">
+	                时间范围：
+	                </label>
+	                <input id="reportrange" class="form-control" name="date_range" placeholder="请点击选择">
+	            </form>
+	            <br>
+	        </div>
+	    </div>
+
+	    <div class="row">
+	        <div class="col-xs-2">
+	        	航线一车间监管
+	            <div id="air1_dep" style="width:210px"></div>
+	        </div>
+	        <div class="col-xs-2">
+	        	航线一班组自查
+	            <div id="air1_team" style="width:210px"></div>
+	        </div>
+	        <div class="col-xs-2">
+	        	航线二车间监管
+	            <div id="air2_dep" style="width:210px"></div>
+	        </div>
+	        <div class="col-xs-2">
+	        	航线二班组自查
+	            <div id="air2_team" style="width:210px"></div>
+	        </div>
+	        <div class="col-xs-2">
+	        	定检车间监管
+	            <div id="certain_dep" style="width:210px"></div>
+	        </div>
+	        <div class="col-xs-2">
+	        	定检班组自查
+	            <div id="certain_team" style="width:210px"></div>
+	        </div>
+	    </div>
     </div>
 </div>
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-3">
-        	航线一车间监管
-            <div id="air1_dep" style="width:210px"></div>
-        </div>
-        <div class="col-xs-6">
-        	航线一班组自查
-            <div id="air1_team" style="width:210px"></div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-3">
-        	航线二车间监管
-            <div id="air2_dep" style="width:210px"></div>
-        </div>
-        <div class="col-xs-6">
-        	航线二班组自查
-            <div id="air2_team" style="width:210px"></div>
-        </div>
-    </div>
-</div>
-
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-3">
-        	定检车间监管
-            <div id="certain_dep" style="width:210px"></div>
-        </div>
-        <div class="col-xs-6">
-        	定检班组自查
-            <div id="certain_team" style="width:210px"></div>
-        </div>
-    </div>
+    
 </div>
 
 <script type="text/javascript" src="/static/daterangepicker/moment.js"></script>
@@ -275,7 +412,7 @@ var hot_scrutator = new Handsontable(container_scrutator,{
 });
 
 function getHeight() {
-        return 500;
+        return 257;
     }
 
 </script>
