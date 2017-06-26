@@ -27,7 +27,7 @@ urlpatterns = [
     #mysite
     (url(r'^$', cache_page(60*60*24)(low_views.home), name='home')),
     url(r'^information$', cache_page(60*60*24)(low_views.information)),
-    url(r'^background$', 'main.views.background'),
+    url(r'^background$', low_views.background),
     url(r'^source$', cache_page(60*60*24)(low_views.source)),
     url(r'^source_month$', cache_page(60*60*24)(low_views.source_month), name='source_month'),
     url(r'^month_count$', cache_page(60*60*24)(low_views.month_count)),
