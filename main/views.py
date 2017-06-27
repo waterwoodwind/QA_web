@@ -7,6 +7,18 @@ import json
 import pandas as pd
 import arrow
 import re
+#time count
+import time
+
+def timeit(func):
+    def wrapper(*args, **args2):
+        start = time.clock()
+        back = func(*args, **args2)
+        end =time.clock()
+        print "@%.3fs taken for {%s}" % (end - start, func.__name__)
+        return back
+    return wrapper
+
 # Create functions here.
 def make_scrutator_json(df_data, department, source):
     df_da = df_data[(df_data[u"受检单位"] == department)& \
@@ -95,6 +107,7 @@ def make_month_count_json():
     return json_month, json_count
 
 # Create your views here.
+@timeit
 def home(request):
     if request.method == 'POST':
         post_data = request.POST
@@ -129,6 +142,7 @@ def home(request):
                                          "json_month":json_month,
                                         "json_count":json_count})
 
+@timeit
 def information(request):
     exclude_list = [u"检查者", u"ID"]
 
@@ -197,6 +211,7 @@ def information(request):
     upload_data = json.dumps(chinese_updata)
     return render(request, 'information.html',{'json_data': upload_data})
 
+@timeit
 def df_chinese_data():
     exclude_list = []
 
