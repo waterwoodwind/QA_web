@@ -25,7 +25,7 @@ from django.views.decorators.cache import cache_page
 urlpatterns = [
     (url(r'^admin/', include(admin.site.urls))),
     #mysite
-    (url(r'^$', low_views.home, name='home')),
+    (url(r'^$', cache_page(60*60*24)(low_views.home), name='home')),
     url(r'^information$', cache_page(60*60*24)(low_views.information)),
     url(r'^background$', low_views.background),
     url(r'^source$', cache_page(60*60*24)(low_views.source)),

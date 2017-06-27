@@ -278,18 +278,21 @@ def df_chinese_data():
 
     return chinese_updata
 
+@timeit
 def background(request):
 
 
     upload_data = json.dumps(df_chinese_data())
     return render(request, 'background.html', {'json_data': upload_data})
 
+@timeit
 def source(request):
     df_data = pd.DataFrame(df_chinese_data())
     source = df_data[u"信息来源"].value_counts().to_json()
     title = u'汇总'
     return render(request, 'source.html',{'title': title, 'source': source})
 
+@timeit
 def source_month(request):
     df_data = pd.DataFrame(df_chinese_data())
     df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
@@ -310,6 +313,7 @@ def source_month(request):
     print type(source)
     return HttpResponse(source)
 
+@timeit
 def month_count(request):
     df_data = pd.DataFrame(df_chinese_data())
     df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
@@ -358,6 +362,7 @@ def month_count(request):
     return render(request, "month_count.html",{"json_month":json_month,
                                                "json_count":json_count})
 
+@timeit
 def classification(request):
     df_data = pd.DataFrame(df_chinese_data())
     df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
@@ -447,7 +452,7 @@ def classification(request):
                                                "json_count":json_count,
                                                   "json_series": json_series})
 
-
+@timeit
 def person_count(request):
     if request.method == 'POST':
         post_data = request.POST
@@ -514,7 +519,7 @@ def person_count(request):
     return render(request, "person_count.html", {'json_person': json_person,
                                                  'json_scrutator':json_scrutator})
 
-
+@timeit
 def date_range_df_chinese_data(date_start, date_end):
     exclude_list = []
 
@@ -581,6 +586,7 @@ def date_range_df_chinese_data(date_start, date_end):
 
     return chinese_updata
 
+@timeit
 def month_count_group_by_source(request):
     df_data = pd.DataFrame(df_chinese_data())
     df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
@@ -637,6 +643,7 @@ def month_count_group_by_source(request):
                                                                "json_count_workshop":json_count_workshop,
                                                                "json_count_team":json_count_team})
 
+@timeit
 def month_count_group_by_department(request):
     df_data = pd.DataFrame(df_chinese_data())
     df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
