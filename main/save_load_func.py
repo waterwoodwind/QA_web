@@ -15,11 +15,6 @@ def list_all_data():
 
 #views
 def refresh_middle_data(request):
-    if os.path.exists('data_all.pkl'):
-        os.remove('data_all.pkl')
-    if os.path.exists('data.h5'):
-        os.remove('data.h5')
-
     exclude_list = []
 
     query_data = qa_info.objects.all().order_by('-data')
@@ -84,9 +79,13 @@ def refresh_middle_data(request):
         chinese_updata.append(dict_updata)
 
     #save list
+    if os.path.exists('data_all.pkl'):
+        os.remove('data_all.pkl')
     file_1 = file('data_all.pkl', 'wb')
     pickle.dump(chinese_updata, file_1, True)
     #save pd file
+    if os.path.exists('data.h5'):
+        os.remove('data.h5')
     df_data = pd.DataFrame(chinese_updata)
     df_data.to_hdf('data.h5', 'df')
 
