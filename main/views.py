@@ -7,8 +7,11 @@ import json
 import pandas as pd
 import arrow
 import re
+import pickle
 #time count
 import time
+# import save and load data function
+from save_load_func import list_all_data
 
 def timeit(func):
     def wrapper(*args, **args2):
@@ -60,8 +63,8 @@ def make_scrutator_json(df_data, department, source):
     return json_scrutator
 
 def make_month_count_json():
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     string_index = df_data[u'日期']
     # 计算出起止月份
     start_day = string_index.min()
@@ -114,11 +117,11 @@ def home(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        df_index = pd.date_range(date_start, date_end)
         print date_start,date_end
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start,date_end))
     else:
-        df_data = pd.DataFrame(df_chinese_data())
+
+        df_data = pd.read_hdf('data.h5', 'df')
 
     if df_data.empty:
         return HttpResponse(u"该时间范围内无数据，请返回上一页")
@@ -144,71 +147,7 @@ def home(request):
 
 @timeit
 def information(request):
-    exclude_list = [u"检查者", u"ID"]
-
-    query_data = qa_info.objects.all().order_by('-data')
-    json_data = serializers.serialize("json", query_data,use_natural_foreign_keys=True)
-    list_data = json.loads(json_data)
-
-    dict_name_verbose_name = {}
-    columns_set = []
-    colheaders = []
-    dataSchema = {}
-    for field in qa_info._meta.fields:
-        dict_name_verbose_name[field.name] = field.verbose_name
-
-        if not field.verbose_name in exclude_list:
-            print field.verbose_name
-            colheaders.append(field.verbose_name.encode("utf8"))
-            dataSchema[field.verbose_name] = ''
-            columns_item = {
-                u"title": field.verbose_name,
-                u"field": field.verbose_name,
-                #u"sortable": u"true",
-            }
-            if field.verbose_name == u"问题描述":
-                columns_item[u"width"] = u"20%"
-                columns_item[u"title"] = u"问题描述"
-            elif field.verbose_name == u"整改措施":
-                columns_item[u"width"] = u"20%"
-                columns_item[u"title"] = u"整改措施"
-            elif field.verbose_name == u"处理意见":
-                columns_item[u"width"] = u"6%"
-                columns_item[u"title"] = u"处理意见"
-            else:
-                split_list = list(field.verbose_name)
-                # every two word add
-                title_str = ""
-                for i in range(len(split_list)):
-                    title_str = title_str + split_list[i]
-                    if (i+1)%2 == 0:
-                        title_str = title_str + u"<br>"
-                if field.verbose_name == u"相关附件":
-                    columns_item[u'formatter'] = "attachment"
-                columns_item[u"title"] = title_str
-                columns_item[u"width"] = u"2%"
-            columns_set.append(columns_item)
-
-
-    json_columns = json.dumps(columns_set)
-
-
-    upload_data = []
-    for item in list_data:
-        upload_data.append(item['fields'])
-        #print upload_data
-
-    chinese_updata = []
-    for item in upload_data:
-        dict_updata = {}
-        for key,value in item.items():
-            if not dict_name_verbose_name[key] in exclude_list:
-                dict_updata[dict_name_verbose_name[key]] = value
-
-            #print chinese_updata
-        chinese_updata.append(dict_updata)
-
-    upload_data = json.dumps(chinese_updata)
+    upload_data = json.dumps(list_all_data())
     return render(request, 'information.html',{'json_data': upload_data})
 
 @timeit
@@ -276,26 +215,30 @@ def df_chinese_data():
             # print chinese_updata
         chinese_updata.append(dict_updata)
 
+    #save list
+    file_1 = file('data_all.pkl', 'wb')
+    pickle.dump(chinese_updata, file_1, True)
+    #save pd file
+    df_data = pd.DataFrame(chinese_updata)
+    df_data.to_hdf('data.h5', 'df')
     return chinese_updata
 
 @timeit
 def background(request):
-
-
-    upload_data = json.dumps(df_chinese_data())
+    upload_data = json.dumps(list_all_data())
     return render(request, 'background.html', {'json_data': upload_data})
 
 @timeit
 def source(request):
-    df_data = pd.DataFrame(df_chinese_data())
+    df_data = pd.read_hdf('data.h5', 'df')
     source = df_data[u"信息来源"].value_counts().to_json()
     title = u'汇总'
     return render(request, 'source.html',{'title': title, 'source': source})
 
 @timeit
 def source_month(request):
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     year_month = request.GET.get('value_conf', None)
 
     end = arrow.get(year_month)
@@ -315,8 +258,8 @@ def source_month(request):
 
 @timeit
 def month_count(request):
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     string_index = df_data[u'日期']
     # 计算出起止月份
     start_day = string_index.min()
@@ -364,8 +307,8 @@ def month_count(request):
 
 @timeit
 def classification(request):
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     string_index = df_data[u'日期']
     # 计算出起止月份
     start_day = string_index.min()
@@ -459,11 +402,10 @@ def person_count(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        df_index = pd.date_range(date_start, date_end)
         print date_start,date_end
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start,date_end))
     else:
-        df_data = pd.DataFrame(df_chinese_data())
+        df_data = pd.read_hdf('data.h5', 'df')
 
     if df_data.empty:
         return HttpResponse(u"该时间范围内无数据，请返回上一页")
@@ -588,8 +530,8 @@ def date_range_df_chinese_data(date_start, date_end):
 
 @timeit
 def month_count_group_by_source(request):
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     string_index = df_data[u'日期']
     # 计算出起止月份
     start_day = string_index.min()
@@ -645,8 +587,8 @@ def month_count_group_by_source(request):
 
 @timeit
 def month_count_group_by_department(request):
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     string_index = df_data[u'日期']
     # 计算出起止月份
     start_day = string_index.min()

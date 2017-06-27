@@ -9,7 +9,7 @@ import arrow
 import re
 
 from views import df_chinese_data
-
+from save_load_func import list_all_data
 
 def numpy_to_int(dict_np):
     for key,item in dict_np.items():
@@ -22,8 +22,8 @@ def source_month_stack(request):
     return render(request, 'source_month_stack.html')
 
 def ajax_source_month_stack(request):
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     year_month = request.GET.get('value_conf', None)
 
     end = arrow.get(year_month)
@@ -56,8 +56,8 @@ def team_month_stack(request):
 
 
 def ajax_team_month_stack(request):
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     year_month = request.GET.get('value_conf', None)
 
     end = arrow.get(year_month)
@@ -90,8 +90,8 @@ def self_inspect_trendence(request, workshop_name):
         list_team_name = [u'航线一（1）', u'航线一（2）', u'航线一（3）', u'航线一（4）']
     else:
         list_team_name = [u'航线二（1）', u'航线二（2）', u'航线二（3）', u'航线二（4）']
-    df_data = pd.DataFrame(df_chinese_data())
-    df_da = pd.DataFrame(df_chinese_data(), index=df_data[u'日期'])
+    df_data = pd.read_hdf('data.h5', 'df')
+    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     string_index = df_data[u'日期']
     # 计算出起止月份
     start_day = string_index.min()
@@ -149,7 +149,7 @@ def self_inspect_trendence(request, workshop_name):
                                                           "json_data":json_data})
 
 def grade_scatter(request):
-    df_data = pd.DataFrame(df_chinese_data())
+    df_data = pd.read_hdf('data.h5', 'df')
     df_data = df_data[df_data[u"严重程度"]>0]
     df_data = df_data[[u"日期",u"受检单位",u"严重程度"]]
     df_airline_1 = df_data[df_data[u"受检单位"]==u"航线一"]
