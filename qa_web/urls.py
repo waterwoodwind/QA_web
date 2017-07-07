@@ -21,7 +21,8 @@ from django.conf.urls.static import static
 from main import views as low_views
 from main import high_views
 from main import save_load_func as sl_views
-from django.views.decorators.cache import cache_page
+
+admin.autodiscover()
 
 urlpatterns = [
     (url(r'^admin/', include(admin.site.urls))),
