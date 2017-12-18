@@ -72,11 +72,11 @@ def ajax_team_month_stack(request):
     df_month = df_da.loc[list_a_month]
 
     team = df_month[u'责任班组'][df_month[u'信息来源']==u"班组自查"].value_counts().to_dict()
-    quality = df_month[u'责任班组'][df_month[u'信息来源']==u"车间监管"].value_counts().to_dict()
-    workshop = df_month[u'责任班组'][df_month[u'信息来源']==u"质量监管"].value_counts().to_dict()
+    workshop = df_month[u'责任班组'][df_month[u'信息来源']==u"车间监管"].value_counts().to_dict()
+    quality = df_month[u'责任班组'][df_month[u'信息来源'] == u"质量监管"].value_counts().to_dict()
     team = numpy_to_int(team)
-    quality = numpy_to_int(quality)
     workshop = numpy_to_int(workshop)
+    quality = numpy_to_int(quality)
 
     json_data = {'team':team, 'quality': quality, 'workshop':workshop}
     json_data = json.dumps(json_data)
