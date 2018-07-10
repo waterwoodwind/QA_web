@@ -23,7 +23,7 @@
     	    },
     	    legend: {
     	        left: 'left',
-    	        data: ['定检车间', '航线一车间', '航线二车间']
+    	        data: ['定检', '航线一', '航线二','航线三']
     	    },
             dataZoom:{
                 show:true,
@@ -40,7 +40,7 @@
             },
     	    series : [
     	        {
-                    name: '定检车间',
+                    name: '定检',
                     type: 'line',
                     center: ['50%', '60%'],
                     data:{{json_count_scheduled | safe}},
@@ -55,7 +55,7 @@
                     }
                 },
                 {
-                    name: '航线一车间',
+                    name: '航线一',
                     type: 'line',
                     center: ['50%', '60%'],
                     data:{{json_count_airline1 | safe}},
@@ -70,16 +70,31 @@
                     }
                 },
                 {
-                    name: '航线二车间',
+                    name: '航线二',
                     type: 'line',
                     center: ['50%', '60%'],
                     data:{{json_count_airline2 | safe}},
                     itemStyle: {
-                        normal:{ 
-                            label:{ 
-                               show: true, 
-                               formatter: '{c}' 
-                            }, 
+                        normal:{
+                            label:{
+                               show: true,
+                               formatter: '{c}'
+                            },
+                            labelLine :{show:true}
+                        }
+                    }
+                },
+                {
+                    name: '航线三',
+                    type: 'line',
+                    center: ['50%', '60%'],
+                    data:{{json_count_airline3 | safe}},
+                    itemStyle: {
+                        normal:{
+                            label:{
+                               show: true,
+                               formatter: '{c}'
+                            },
                             labelLine :{show:true}
                         }
                     }
