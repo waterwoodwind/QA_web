@@ -88,8 +88,10 @@ def ajax_team_month_stack(request):
 def self_inspect_trendence(request, workshop_name):
     if workshop_name == "1":
         list_team_name = [u'航线一（1）', u'航线一（2）', u'航线一（3）', u'航线一（4）']
-    else:
+    elif workshop_name == "2":
         list_team_name = [u'航线二（1）', u'航线二（2）', u'航线二（3）', u'航线二（4）']
+    else:
+        list_team_name = [u'航线三（1）', u'航线三（2）', u'航线三（3）', u'航线三（4）']
     df_data = pd.read_hdf('data.h5', 'df')
     df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
     string_index = df_data[u'日期']
