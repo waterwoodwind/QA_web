@@ -175,6 +175,16 @@
 	        	航线二班组自查
 	            <div id="air2_team" style="width:210px"></div>
 	        </div>
+		</div>
+		<div class="row">
+			<div class="col-xs-2">
+	        	航线三车间监管
+	            <div id="air3_dep" style="width:210px"></div>
+	        </div>
+	        <div class="col-xs-2">
+	        	航线三班组自查
+	            <div id="air3_team" style="width:210px"></div>
+	        </div>
 	        <div class="col-xs-2">
 	        	定检车间监管
 	            <div id="certain_dep" style="width:210px"></div>
@@ -365,6 +375,50 @@ var hot_scrutator = new Handsontable(container_scrutator,{
   }
 });
 
+var air3_dep_data = new Array();
+air3_dep_data = {{ air3_dep | safe}};
+var container_scrutator = document.getElementById('air3_dep');
+var hot_scrutator = new Handsontable(container_scrutator,{
+    data: air3_dep_data,
+  rowHeaders: true,
+  colHeaders: ['检查者', '次数'],
+  columns: [
+      {data: '检查者'},
+      {data: '次数'},
+    ],
+  dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+  readOnly: true,
+  colWidths: [65, 65],
+  filters: true,
+  height: getHeight(),
+  columnSorting: {
+    column: 1,
+    sortOrder: false
+  }
+});
+
+
+var air3_team_data = new Array();
+air3_team_data = {{ air3_team | safe}};
+var container_scrutator = document.getElementById('air3_team');
+var hot_scrutator = new Handsontable(container_scrutator,{
+    data: air3_team_data,
+  rowHeaders: true,
+  colHeaders: ['检查者', '次数'],
+  columns: [
+      {data: '检查者'},
+      {data: '次数'},
+    ],
+  dropdownMenu: ['filter_by_condition', 'filter_by_value', 'filter_action_bar'],
+  readOnly: true,
+  colWidths: [65, 65],
+  filters: true,
+  height: getHeight(),
+  columnSorting: {
+    column: 1,
+    sortOrder: false
+  }
+});
 
 var certain_dep_data = new Array();
 certain_dep_data = {{ certain_dep | safe}};

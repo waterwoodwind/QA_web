@@ -131,6 +131,8 @@ def home(request):
     air1_team = make_scrutator_json(df_data, u"航线一", u"班组自查")
     air2_dep = make_scrutator_json(df_data, u"航线二", u"车间监管")
     air2_team = make_scrutator_json(df_data, u"航线二", u"班组自查")
+    air3_dep = make_scrutator_json(df_data, u"航线三", u"车间监管")
+    air3_team = make_scrutator_json(df_data, u"航线三", u"班组自查")
     certain_dep = make_scrutator_json(df_data, u"定检", u"车间监管")
     certain_team = make_scrutator_json(df_data, u"定检", u"班组自查")
 
@@ -140,6 +142,8 @@ def home(request):
                                          'air1_team': air1_team,
                                          'air2_dep':air2_dep,
                                          'air2_team':air2_team,
+                                         'air3_dep': air3_dep,
+                                         'air3_team': air3_team,
                                          'certain_dep':certain_dep,
                                          'certain_team':certain_team,
                                          "json_month":json_month,
