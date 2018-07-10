@@ -88,13 +88,17 @@ def ajax_team_month_stack(request):
 def self_inspect_trendence(request, workshop_name):
     if workshop_name == "1":
         list_team_name = [u'航线一（1）', u'航线一（2）', u'航线一（3）', u'航线一（4）']
+        team_name = u'航线一'
     elif workshop_name == "2":
         list_team_name = [u'航线二（1）', u'航线二（2）', u'航线二（3）', u'航线二（4）']
+        team_name = u'航线二'
     else:
         list_team_name = [u'航线三（1）', u'航线三（2）', u'航线三（3）', u'航线三（4）']
+        team_name = u'航线三'
     df_data = pd.read_hdf('data.h5', 'df')
     df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
-    string_index = df_data[u'日期']
+    df_string = df_da[df_da[u'受检单位']==team_name]
+    string_index = df_string[u'日期']
     # 计算出起止月份
     start_day = string_index.min()
     end_day = string_index.max()
