@@ -387,14 +387,16 @@ def classification(request):
     start_ar = arrow.get(start_day)
     end_ar = arrow.get(end_day)
     if start_ar.day >= 26:
-        number_month = start_ar.month + 1
+    	start_ar_shift = start_ar.shift(months = 1)
+        number_month = start_ar_shift.month
     else:
         number_month = start_ar.month
     start_month = start_ar.replace(month=number_month)
     if end_ar.day >= 26:
-        number_month = end_ar.month + 1
+    	end_ar_shift = end_ar.shift(months = 1)
+        number_month = end_ar_shift.month
     else:
-        number_month = end_ar.month + 1
+        number_month = end_ar.month
     end_month = end_ar.replace(month=number_month)
 
     list_month = []
