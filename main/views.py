@@ -376,7 +376,7 @@ def month_count(request):
     return render(request, "month_count.html",{"json_month":json_month,
                                                "json_count":json_count})
 
-@timeit
+
 def classification(request):
     df_data = pd.read_hdf('data.h5', 'df')
     df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
