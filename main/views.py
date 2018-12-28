@@ -392,17 +392,15 @@ def classification(request):
     else:
         number_month = start_ar.month
     start_month = start_ar.replace(month=number_month)
-    if end_ar.day >= 26:
-    	end_ar_shift = end_ar.shift(months = 1)
-        number_month = end_ar_shift.month
-    else:
-        number_month = end_ar.month
-    end_month = end_ar.replace(month=number_month)
-
+    end_ar = end_ar.shift(months = 1)
+    end_month = end_ar
+    print "end_month"
+    print end_month
     list_month = []
     list_month_cl_count = []
 
     for r in arrow.Arrow.range('month', start_month, end_month):
+        print r
         year_month = r.format("YYYY-MM").encode("utf-8")
         end = arrow.get(r)
         end = end.replace(day=25)
@@ -446,13 +444,13 @@ def classification(request):
     all_series = []
     for list_item in list_month_cl_count:
         for item, value in list_item.items():
-            print item, value
+            #print item, value
             series_single = series_single_orignal.copy()
             series_single["name"] = item
             series_single["data"] = value
-            print series_single["name"], series_single["data"]
+            #print series_single["name"], series_single["data"]
             all_series.append(series_single)
-            print all_series
+            #print all_series
     #获取最后一个元素，控制显示
     dict_selected = {}
     for index, list_item in enumerate(list_month_cl_count):
