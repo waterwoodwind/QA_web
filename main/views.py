@@ -511,7 +511,7 @@ def person_count(request):
     res_dict = {}
     for item in df_scrutator.values:
         # print item
-        results = re.findall(ur"[\u4e00-\u9fa5]+", item)
+        results = re.findall(ur"[\u4e00-\u9fa5\d]+", item)
         for result in results:
             # print result
             res_dict[result] = res_dict.get(result, 0) + 1
