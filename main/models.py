@@ -118,7 +118,7 @@ class qa_info(models.Model):
     grade = models.DecimalField(max_digits=1, decimal_places=0,verbose_name = u'严重程度', blank= True)
 
     class Meta:
-        ordering = ["data"]
+        ordering = ["-data"]
 
     def __unicode__(self):
         return self.problem_description

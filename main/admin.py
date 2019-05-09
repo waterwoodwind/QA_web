@@ -8,6 +8,8 @@ import re
 
 # Register your models here.
 class qa_infoAdmin(admin.ModelAdmin):
+    list_display = ('data', 'problem_description', 'grade',)
+    list_display_links = ('data', 'problem_description', 'grade',)
     def save_model(self, request, obj, form, change):
         filename = r'grade.csv'
         pos = []
