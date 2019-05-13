@@ -43,6 +43,11 @@ class qa_infoAdmin(admin.ModelAdmin):
         print obj.grade
         obj.save()
 
+class hr_infoAdmin(admin.ModelAdmin):
+    list_display = ('hr_employee_number', 'hr_employee_name','hr_team', 'hr_department',)
+    list_display_links = ('hr_employee_name',)
+
+admin.site.register(hr_info, hr_infoAdmin)
 admin.site.register(qa_info, qa_infoAdmin)
 admin.site.register(Location)
 admin.site.register(Time_Bucket)

@@ -123,3 +123,11 @@ class qa_info(models.Model):
     def __unicode__(self):
         return self.problem_description
 
+class hr_info(models.Model):
+    hr_employee_number = models.CharField(max_length=100, verbose_name=u'员工编号')
+    hr_employee_name = models.CharField(max_length=100, verbose_name=u'员工姓名')
+    hr_department = models.ForeignKey(Department, blank= True, null=True,verbose_name=u'受检单位')
+    hr_team = models.ForeignKey(Team, blank= True, null=True, verbose_name=u'责任班组')
+
+    def __unicode__(self):
+        return self.hr_employee_name
