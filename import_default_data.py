@@ -1,6 +1,12 @@
 #coding=utf-8
+
+
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "qa_web.settings")
+
+import django
+django.setup()
+
 from main.models import *
 
 def import_location():
@@ -56,7 +62,22 @@ def import_model(txt_file,model_object):
         objectList.append(single_object)
     model_object.objects.bulk_create(objectList)
 
+def import_hr_info():
+    objectList = []
+    f = open(u'人岗 按数据库department匹配名.csv')
+    for line in f:
+        item_list = line.split(',')
+        employee_number, employee_name, department = item_list[0], item_list[1], item_list[2]
+        department_id = Department.objects.get(name = department)
+        single_object = hr_info(hr_employee_number = employee_number,
+                               hr_employee_name = employee_name,
+                               hr_department = department_id)
+        objectList.append(single_object)
+    f.close()
+    hr_info.objects.bulk_create(objectList)
+
 if __name__ == "__main__":
+    '''初始化时已完成
     import_location()
     import_Time_Bucket()
     import_Department()
@@ -65,4 +86,6 @@ if __name__ == "__main__":
     import_model("Event_class.txt", Event_class)
     import_model("Team.txt", Team)
     import_model("State.txt", State)
+    '''
+    import_hr_info()
     print('Done!')
