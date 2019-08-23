@@ -67,7 +67,7 @@ def strutator_grade(request):
             #print df_single_person
         # 对df_single_person合并总分
             sum_single_person = df_single_person[u"严重程度"].sum()
-            sum_single_person = sum_single_person.astype(int)
+            sum_single_person = int(sum_single_person)
             print name,sum_single_person
             print type(sum_single_person)
         # 人名、总分、部门压入name_grade_department_list
