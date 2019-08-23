@@ -8,6 +8,7 @@ def get_qa_info_with_grade():
     df_data = pd.read_hdf('data.h5', 'df')
     df_data = df_data[df_data[u"严重程度"] > 0]
     df_data = df_data.loc[:, [u"责任人",u"检查者", u"严重程度"]]
+    df_data[[u"严重程度"]] = df_data[[u"严重程度"]].apply(pd.to_numeric)
     return df_data
 
 def get_hr_info():
