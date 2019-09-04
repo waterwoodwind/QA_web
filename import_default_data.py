@@ -8,7 +8,7 @@ import django
 django.setup()
 
 from main.models import *
-
+import codecs
 def import_location():
     f = open('Location.txt')
     txt = f.read()
@@ -75,6 +75,38 @@ def import_hr_info():
         objectList.append(single_object)
     f.close()
     hr_info.objects.bulk_create(objectList)
+
+def import_hr_info_team():
+    objectList = []
+    f = codecs.open(u'人岗 按数据库department匹配名 含班组.csv', "r", "utf-8")
+    # f = open(u'人岗 按数据库department匹配名 含班组.csv','r', 'utf-8')
+    print f
+    s = f.readlines()
+    print s
+    for line in s:
+        print line
+        item_list = line.split(',')
+        employee_number, employee_name, department, team = item_list[0], item_list[1], item_list[2], item_list[3]
+        if employee_number == u'\ufeff338747':
+            employee_number = u'338747'
+        department_id = Department.objects.get(name=department)
+        employee_number = employee_number.zfill(8)
+
+        print type(employee_number), employee_number
+        team = team.strip()
+        employee_number = employee_number.strip()
+        print employee_number, team
+        print type(team)
+        print team == u'无'
+        # print chardet.detect(team)
+        # print chardet.detect(department)
+        team_id = Team.objects.get(name=team)
+        # print employee_number, team_id
+        hr_object = hr_info.objects.get(hr_employee_number=employee_number)
+        hr_object.hr_team = team_id
+        # objectList.append(hr_object)
+        hr_object.save()
+    f.close()
 
 if __name__ == "__main__":
     '''初始化时已完成
