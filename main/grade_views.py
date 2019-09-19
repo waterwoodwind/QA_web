@@ -35,8 +35,6 @@ def staff_grade_year(request):
         # 对df_single_person合并总分
             sum_single_person = df_single_person[u"严重程度"].sum()
             sum_single_person = int(sum_single_person)
-            print name,sum_single_person
-            print type(sum_single_person)
         # 人名、总分、部门压入name_grade_department_list
             single_dict = {}
             single_dict[u"责任人"] = name
@@ -69,8 +67,6 @@ def strutator_grade(request):
         # 对df_single_person合并总分
             sum_single_person = df_single_person[u"严重程度"].sum()
             sum_single_person = int(sum_single_person)
-            print name,sum_single_person
-            print type(sum_single_person)
         # 人名、总分、部门压入name_grade_department_list
             single_dict = {}
             single_dict[u"检查者"] = name
@@ -109,7 +105,6 @@ def department_grade(request):
             person_grade_list.append(100)
         # print name_grade_department_list
     df_hr_info[u'安全分'] = person_grade_list
-    print df_hr_info
     df_agg = df_hr_info.groupby(u'部门').agg('mean').round(2)
     print df_agg,type(df_agg)
     df_agg = df_agg.reset_index()
@@ -155,19 +150,15 @@ def self_checking_grade(request):
             person_grade_list.append(0)
         # print name_grade_department_list
     df_hr_info[u'安全分'] = person_grade_list
-    print df_hr_info
-    df_agg = df_hr_info.groupby(u'部门').agg('mean').round(2)
-    print df_agg,type(df_agg)
+    df_scrutator = df_hr_info[df_hr_info[u'安全分']>0]
+    df_agg = df_scrutator.groupby(u'部门').agg('mean').round(2)
     df_agg = df_agg.reset_index()
     df_dict = df_agg.to_dict('records')
-    print df_dict
     json_grade = json.dumps(df_dict)
     # 班组分数
-    df_team_mean = df_hr_info.groupby(u'班组').agg('mean').round(2)
-    print df_team_mean
+    df_team_mean = df_scrutator.groupby(u'班组').agg('mean').round(2)
     df_team_mean_reset = df_team_mean.reset_index()
     dict_team_mean = df_team_mean_reset.to_dict('records')
-    print dict_team_mean
     team_mean = json.dumps(dict_team_mean)
     return render(request, 'department_grade.html', {'json_grade': json_grade,
                                                      'json_team':team_mean})
