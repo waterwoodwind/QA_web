@@ -116,4 +116,12 @@ def department_grade(request):
     df_dict = df_agg.to_dict('records')
     print df_dict
     json_grade = json.dumps(df_dict)
-    return render(request, 'department_grade.html', {'json_grade': json_grade})
+    # 班组分数
+    df_team_mean = df_hr_info.groupby(u'班组').agg('mean')
+    print df_team_mean
+    df_team_mean_reset = df_team_mean.reset_index()
+    dict_team_mean = df_team_mean_reset.to_dict('records')
+    print dict_team_mean
+    team_mean = json.dumps(dict_team_mean)
+    return render(request, 'department_grade.html', {'json_grade': json_grade,
+                                                     'json_team':team_mean})
