@@ -49,6 +49,7 @@ urlpatterns = [
     url(r'^staff_grade_year$', grade_views.staff_grade_year),
     url(r'^scrutator_grade$', grade_views.strutator_grade),
     url(r'^department_grade$', grade_views.department_grade),
+    url(r'^self_checking_grade$', grade_views.self_checking_grade),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
