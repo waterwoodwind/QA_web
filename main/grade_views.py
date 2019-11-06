@@ -274,7 +274,6 @@ def self_checking_grade_totlal(request):
         # print name_grade_department_list
     df_hr_info[u'安全分'] = person_grade_list
     df_scrutator = df_hr_info[df_hr_info[u'安全分']>0]
-    print df_scrutator
     df_agg = df_scrutator.groupby(u'部门').sum()
     df_agg = df_agg.reset_index()
     df_dict = df_agg.to_dict('records')
@@ -283,7 +282,6 @@ def self_checking_grade_totlal(request):
     df_team_mean = df_scrutator.groupby(u'班组').sum()
     df_team_mean_reset = df_team_mean.reset_index()
     dict_team_mean = df_team_mean_reset.to_dict('records')
-    print dict_team_mean
     for item in dict_team_mean:
         if u"无" ==item[u'班组']:
             dict_team_mean.remove(item)
