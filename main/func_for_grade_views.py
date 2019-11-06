@@ -11,11 +11,6 @@ def get_qa_info_with_grade():
     df_data[[u"严重程度"]] = df_data[[u"严重程度"]].apply(pd.to_numeric)
     return df_data
 
-def df_to_gradedf(df):
-    df_data = df[df[u"严重程度"] > 0]
-    df_data = df_data.loc[:, [u"责任人", u"检查者", u"严重程度"]]
-    df_data[[u"严重程度"]] = df_data[[u"严重程度"]].apply(pd.to_numeric)
-    return df_data
 def get_hr_info():
     tuple_hr_info = list(hr_info.objects.values_list('hr_employee_number', 'hr_employee_name', 'hr_department', 'hr_team'))
     list_hr_info = []
