@@ -9,13 +9,32 @@ import arrow
 import re
 
 from views import df_chinese_data
+from views import date_range_df_chinese_data
 from save_load_func import list_all_data
 from func_for_grade_views import get_qa_info_with_grade
+from func_for_grade_views import df_to_gradedf
 from func_for_grade_views import get_hr_info
 from func_for_grade_views import get_hr_info_df
 
 def staff_grade_year(request):
-    df_data = get_qa_info_with_grade()
+    if request.method == 'POST':
+        post_data = request.POST
+        date_range = post_data["date_range"]
+        date_start = date_range.split(' to ')[0]
+        date_end = date_range.split(' to ')[1]
+        print date_start,date_end
+        df_data = pd.DataFrame(date_range_df_chinese_data(date_start,date_end))
+        df_data = df_data[df_data[u"严重程度"] > 0]
+        df_data = df_data.loc[:, [u"责任人", u"检查者", u"严重程度"]]
+        df_data[[u"严重程度"]] = df_data[[u"严重程度"]].apply(pd.to_numeric)
+
+    else:
+        df_data = get_qa_info_with_grade()
+
+    if df_data.empty:
+        return HttpResponse(u"该时间范围内无数据，请返回上一页")
+
+
     #print df_data
     # 获取输入时间，对df_data按时间截取一次
     # 创建name_grade_department_list
