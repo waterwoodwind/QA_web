@@ -26,7 +26,7 @@ from main import grade_views
 admin.autodiscover()
 
 urlpatterns = [
-    path(r'^admin/', include('admin.site.urls'), name='admin'),
+    path(r'^admin/', admin.site.urls),
     #mysite
     path(r'^$', low_views.home, name='home'),
     path(r'^information$', low_views.information),
