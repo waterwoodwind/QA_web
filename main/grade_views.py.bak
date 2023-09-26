@@ -21,7 +21,7 @@ def staff_grade_year(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        print((date_start,date_end))
+        print(date_start,date_end)
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start,date_end))
         df_data = df_data[df_data["严重程度"] > 0]
         df_data = df_data.loc[:, ["责任人", "检查者", "严重程度"]]
@@ -70,7 +70,7 @@ def strutator_grade(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        print((date_start, date_end))
+        print(date_start, date_end)
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start, date_end))
         df_data = df_data[df_data["严重程度"] > 0]
         df_data = df_data.loc[:, ["责任人", "检查者", "严重程度"]]
@@ -117,7 +117,7 @@ def department_grade(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        print((date_start, date_end))
+        print(date_start, date_end)
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start, date_end))
         df_data = df_data[df_data["严重程度"] > 0]
         df_data = df_data.loc[:, ["责任人", "检查者", "严重程度"]]
@@ -156,7 +156,7 @@ def department_grade(request):
         # print name_grade_department_list
     df_hr_info['安全分'] = person_grade_list
     df_agg = df_hr_info.groupby('部门').agg('mean').round(2)
-    print((df_agg,type(df_agg)))
+    print(df_agg,type(df_agg))
     df_agg = df_agg.reset_index()
     df_dict = df_agg.to_dict('records')
     print(df_dict)
@@ -178,7 +178,7 @@ def self_checking_grade(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        print((date_start, date_end))
+        print(date_start, date_end)
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start, date_end))
         df_data = df_data[df_data["严重程度"] > 0]
         df_data = df_data.loc[:, ["责任人", "检查者", "严重程度"]]
@@ -235,7 +235,7 @@ def self_checking_grade_totlal(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        print((date_start, date_end))
+        print(date_start, date_end)
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start, date_end))
         df_data = df_data[df_data["严重程度"] > 0]
         df_data = df_data.loc[:, ["责任人", "检查者", "严重程度"]]

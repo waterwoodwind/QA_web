@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+import importlib
+importlib.reload(sys)
+# sys.setdefaultencoding('utf-8')
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -15,67 +16,67 @@ import pickle
 #time count
 import time
 # import save and load data function
-from save_load_func import list_all_data
+from .save_load_func import list_all_data
 
 def timeit(func):
     def wrapper(*args, **args2):
         start = time.clock()
         back = func(*args, **args2)
         end =time.clock()
-        print "@%.3fs taken for {%s}" % (end - start, func.__name__)
+        print(("@%.3fs taken for {%s}" % (end - start, func.__name__)))
         return back
     return wrapper
 
 # Create functions here.
 def make_scrutator_json(df_data, department, source):
-    df_da = df_data[(df_data[u"受检单位"] == department)& \
-                    (df_data[u"信息来源"] == source)]
-    df_person = df_da[u'责任人']
+    df_da = df_data[(df_data["受检单位"] == department)& \
+                    (df_data["信息来源"] == source)]
+    df_person = df_da['责任人']
     #chinese_name = u'([/u4e00-/u9fa5]+)'
     #pattern = re.compile(chinese_name)
     res_dict = {}
     for item in df_person.values:
         #print item
-        results = re.findall(ur"[\u4e00-\u9fa5]+", item)
+        results = re.findall(r"[\u4e00-\u9fa5]+", item)
         for result in results:
             #print result
             res_dict[result] = res_dict.get(result, 0) + 1
 
     #检查者
-    df_scrutator = df_da[u"检查者"]
+    df_scrutator = df_da["检查者"]
     res_dict = {}
     for item in df_scrutator.values:
         # print item
-        results = re.findall(ur"[\u4e00-\u9fa5\d]+", item)
+        results = re.findall(r"[\u4e00-\u9fa5\d]+", item)
         for result in results:
             # print result
             res_dict[result] = res_dict.get(result, 0) + 1
-    scrutator_count_list = res_dict.items()
+    scrutator_count_list = list(res_dict.items())
 
     json_list = []
 
     for item in scrutator_count_list:
         single_dict = {}
         # 去掉人员名单中的无
-        if item[0] == u'无':
-            print item[0], item[1]
+        if item[0] == '无':
+            print((item[0], item[1]))
             continue
-        single_dict[u'检查者'] = item[0]
-        single_dict[u'次数'] = item[1]
+        single_dict['检查者'] = item[0]
+        single_dict['次数'] = item[1]
         json_list.append(single_dict)
     json_scrutator = json.dumps(json_list)
     return json_scrutator
 
 def make_month_count_json():
     df_data = pd.read_hdf('data.h5', 'df')
-    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
-    string_index = df_data[u'日期']
+    df_da = pd.DataFrame(list_all_data(), index=df_data['日期'])
+    string_index = df_data['日期']
     # 计算出起止月份
     start_day = string_index.min()
     end_day = string_index.max()
     start_ar = arrow.get(start_day)
     end_ar = arrow.get(end_day)
-    print end_ar
+    print(end_ar)
 
     if start_ar.day >= 26:
         number_month = start_ar.month + 1
@@ -87,7 +88,7 @@ def make_month_count_json():
     else:
         number_month = end_ar.month + 1
     end_month = end_ar.replace(months=number_month)
-    print end_month
+    print(end_month)
 
     list_month = []
     list_month_count = []
@@ -105,7 +106,7 @@ def make_month_count_json():
         try:
             df_month = df_da.loc[list_a_month]
             list_month.append(year_month)
-            list_month_count.append(df_month[u'日期'].count())
+            list_month_count.append(df_month['日期'].count())
         except:
             continue
 
@@ -121,24 +122,24 @@ def home(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        print date_start,date_end
+        print((date_start,date_end))
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start,date_end))
     else:
 
         df_data = pd.read_hdf('data.h5', 'df')
 
     if df_data.empty:
-        return HttpResponse(u"该时间范围内无数据，请返回上一页")
+        return HttpResponse("该时间范围内无数据，请返回上一页")
 
 
-    air1_dep = make_scrutator_json(df_data, u"航线一", u"车间监管")
-    air1_team = make_scrutator_json(df_data, u"航线一", u"班组自查")
-    air2_dep = make_scrutator_json(df_data, u"航线二", u"车间监管")
-    air2_team = make_scrutator_json(df_data, u"航线二", u"班组自查")
-    air3_dep = make_scrutator_json(df_data, u"航线三", u"车间监管")
-    air3_team = make_scrutator_json(df_data, u"航线三", u"班组自查")
-    certain_dep = make_scrutator_json(df_data, u"定检", u"车间监管")
-    certain_team = make_scrutator_json(df_data, u"定检", u"班组自查")
+    air1_dep = make_scrutator_json(df_data, "航线一", "车间监管")
+    air1_team = make_scrutator_json(df_data, "航线一", "班组自查")
+    air2_dep = make_scrutator_json(df_data, "航线二", "车间监管")
+    air2_team = make_scrutator_json(df_data, "航线二", "班组自查")
+    air3_dep = make_scrutator_json(df_data, "航线三", "车间监管")
+    air3_team = make_scrutator_json(df_data, "航线三", "班组自查")
+    certain_dep = make_scrutator_json(df_data, "定检", "车间监管")
+    certain_team = make_scrutator_json(df_data, "定检", "班组自查")
 
     #
     json_month, json_count = make_month_count_json()
@@ -174,23 +175,23 @@ def df_chinese_data():
         dict_name_verbose_name[field.name] = field.verbose_name
 
         if not field.verbose_name in exclude_list:
-            print field.verbose_name
+            print((field.verbose_name))
             colheaders.append(field.verbose_name.encode("utf8"))
             dataSchema[field.verbose_name] = ''
             columns_item = {
-                u"title": field.verbose_name,
-                u"field": field.verbose_name,
+                "title": field.verbose_name,
+                "field": field.verbose_name,
                 # u"sortable": u"true",
             }
-            if field.verbose_name == u"问题描述":
-                columns_item[u"width"] = u"20%"
-                columns_item[u"title"] = u"问题描述"
-            elif field.verbose_name == u"整改措施":
-                columns_item[u"width"] = u"20%"
-                columns_item[u"title"] = u"整改措施"
-            elif field.verbose_name == u"处理意见":
-                columns_item[u"width"] = u"6%"
-                columns_item[u"title"] = u"处理意见"
+            if field.verbose_name == "问题描述":
+                columns_item["width"] = "20%"
+                columns_item["title"] = "问题描述"
+            elif field.verbose_name == "整改措施":
+                columns_item["width"] = "20%"
+                columns_item["title"] = "整改措施"
+            elif field.verbose_name == "处理意见":
+                columns_item["width"] = "6%"
+                columns_item["title"] = "处理意见"
             else:
                 split_list = list(field.verbose_name)
                 # every two word add
@@ -198,11 +199,11 @@ def df_chinese_data():
                 for i in range(len(split_list)):
                     title_str = title_str + split_list[i]
                     if (i + 1) % 2 == 0:
-                        title_str = title_str + u"<br>"
-                if field.verbose_name == u"相关附件":
-                    columns_item[u'formatter'] = "attachment"
-                columns_item[u"title"] = title_str
-                columns_item[u"width"] = u"2%"
+                        title_str = title_str + "<br>"
+                if field.verbose_name == "相关附件":
+                    columns_item['formatter'] = "attachment"
+                columns_item["title"] = title_str
+                columns_item["width"] = "2%"
             columns_set.append(columns_item)
 
     json_columns = json.dumps(columns_set)
@@ -210,14 +211,14 @@ def df_chinese_data():
     upload_data = []
     for item in list_data:
         single_data = item['fields']
-        single_data[u'id'] = item['pk']
+        single_data['id'] = item['pk']
         upload_data.append(single_data)
         # print upload_data
 
     chinese_updata = []
     for item in upload_data:
         dict_updata = {}
-        for key, value in item.items():
+        for key, value in list(item.items()):
             dict_updata[dict_name_verbose_name[key]] = value
 
             # print chinese_updata
@@ -247,23 +248,23 @@ def return_df_chinese_data():
         dict_name_verbose_name[field.name] = field.verbose_name
 
         if not field.verbose_name in exclude_list:
-            print field.verbose_name
+            print((field.verbose_name))
             colheaders.append(field.verbose_name.encode("utf8"))
             dataSchema[field.verbose_name] = ''
             columns_item = {
-                u"title": field.verbose_name,
-                u"field": field.verbose_name,
+                "title": field.verbose_name,
+                "field": field.verbose_name,
                 # u"sortable": u"true",
             }
-            if field.verbose_name == u"问题描述":
-                columns_item[u"width"] = u"20%"
-                columns_item[u"title"] = u"问题描述"
-            elif field.verbose_name == u"整改措施":
-                columns_item[u"width"] = u"20%"
-                columns_item[u"title"] = u"整改措施"
-            elif field.verbose_name == u"处理意见":
-                columns_item[u"width"] = u"6%"
-                columns_item[u"title"] = u"处理意见"
+            if field.verbose_name == "问题描述":
+                columns_item["width"] = "20%"
+                columns_item["title"] = "问题描述"
+            elif field.verbose_name == "整改措施":
+                columns_item["width"] = "20%"
+                columns_item["title"] = "整改措施"
+            elif field.verbose_name == "处理意见":
+                columns_item["width"] = "6%"
+                columns_item["title"] = "处理意见"
             else:
                 split_list = list(field.verbose_name)
                 # every two word add
@@ -271,11 +272,11 @@ def return_df_chinese_data():
                 for i in range(len(split_list)):
                     title_str = title_str + split_list[i]
                     if (i + 1) % 2 == 0:
-                        title_str = title_str + u"<br>"
-                if field.verbose_name == u"相关附件":
-                    columns_item[u'formatter'] = "attachment"
-                columns_item[u"title"] = title_str
-                columns_item[u"width"] = u"2%"
+                        title_str = title_str + "<br>"
+                if field.verbose_name == "相关附件":
+                    columns_item['formatter'] = "attachment"
+                columns_item["title"] = title_str
+                columns_item["width"] = "2%"
             columns_set.append(columns_item)
 
     json_columns = json.dumps(columns_set)
@@ -283,14 +284,14 @@ def return_df_chinese_data():
     upload_data = []
     for item in list_data:
         single_data = item['fields']
-        single_data[u'id'] = item['pk']
+        single_data['id'] = item['pk']
         upload_data.append(single_data)
         # print upload_data
 
     chinese_updata = []
     for item in upload_data:
         dict_updata = {}
-        for key, value in item.items():
+        for key, value in list(item.items()):
             dict_updata[dict_name_verbose_name[key]] = value
 
             # print chinese_updata
@@ -306,42 +307,42 @@ def background(request):
 @timeit
 def source(request):
     df_data = pd.read_hdf('data.h5', 'df')
-    source = df_data[u"信息来源"].value_counts().to_json()
-    title = u'汇总'
+    source = df_data["信息来源"].value_counts().to_json()
+    title = '汇总'
     return render(request, 'source.html',{'title': title, 'source': source})
 
 @timeit
 def source_month(request):
     df_data = pd.read_hdf('data.h5', 'df')
-    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
+    df_da = pd.DataFrame(list_all_data(), index=df_data['日期'])
     year_month = request.GET.get('value_conf', None)
 
     end = arrow.get(year_month)
     end = end.replace(day=25)
     start = end.replace(months=-1)
     start = start.replace(day=26)
-    print end
+    print(end)
     list_a_month = []
     for r in arrow.Arrow.range('day', start, end):
         a_day = r.format('YYYY-MM-DD')
         list_a_month.append(a_day)
     df_month = df_da.loc[list_a_month]
-    source = df_month[u"信息来源"].value_counts().to_json()
-    print source
-    print type(source)
+    source = df_month["信息来源"].value_counts().to_json()
+    print(source)
+    print((type(source)))
     return HttpResponse(source)
 
 @timeit
 def month_count(request):
     df_data = pd.read_hdf('data.h5', 'df')
-    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
-    string_index = df_data[u'日期']
+    df_da = pd.DataFrame(list_all_data(), index=df_data['日期'])
+    string_index = df_data['日期']
     # 计算出起止月份
     start_day = string_index.min()
     end_day = string_index.max()
     start_ar = arrow.get(start_day)
     end_ar = arrow.get(end_day)
-    print end_ar
+    print(end_ar)
 
     if start_ar.day >= 26:
         number_month = start_ar.month + 1
@@ -353,7 +354,7 @@ def month_count(request):
     else:
         number_month = end_ar.month
     end_month = end_ar.replace(months=number_month)
-    print end_month
+    print(end_month)
 
     list_month = []
     list_month_count = []
@@ -371,7 +372,7 @@ def month_count(request):
         try:
             df_month = df_da.loc[list_a_month]
             list_month.append(year_month)
-            list_month_count.append(df_month[u'日期'].count())
+            list_month_count.append(df_month['日期'].count())
         except:
             continue
 
@@ -383,28 +384,28 @@ def month_count(request):
 
 def classification(request):
     df_data = pd.read_hdf('data.h5', 'df')
-    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
-    string_index = df_data[u'日期']
+    df_da = pd.DataFrame(list_all_data(), index=df_data['日期'])
+    string_index = df_data['日期']
     # 计算出起止月份
     start_day = string_index.min()
     end_day = string_index.max()
     start_ar = arrow.get(start_day)
     end_ar = arrow.get(end_day)
     if start_ar.day >= 26:
-    	start_ar_shift = start_ar.shift(months = 1)
+        start_ar_shift = start_ar.shift(months = 1)
         number_month = start_ar_shift.month
     else:
         number_month = start_ar.month
     start_month = start_ar.replace(month=number_month)
     end_ar = end_ar.shift(months = 1)
     end_month = end_ar
-    print "end_month"
-    print end_month
+    print("end_month")
+    print(end_month)
     list_month = []
     list_month_cl_count = []
 
     for r in arrow.Arrow.range('month', start_month, end_month):
-        print r
+        print(r)
         year_month = r.format("YYYY-MM").encode("utf-8")
         end = arrow.get(r)
         end = end.replace(day=25)
@@ -417,15 +418,15 @@ def classification(request):
         try:
             df_month = df_da.loc[list_a_month]
 
-            df_month_group = df_month.groupby(u'问题分类')
-            df_cl = df_month_group[u"时间"].count()
+            df_month_group = df_month.groupby('问题分类')
+            df_cl = df_month_group["时间"].count()
             dict_cl = df_cl.to_dict()
-            list_cl_name = [u'程序执行', u'工卡执行', u'工具设备', u"维护作风", u"现场管理", u"维修记录", u"生产组织", u"器材管理", u"其它"]
+            list_cl_name = ['程序执行', '工卡执行', '工具设备', "维护作风", "现场管理", "维修记录", "生产组织", "器材管理", "其它"]
             for item in list_cl_name:
                 dict_cl.setdefault(item, 0)
-            single_month = [dict_cl[u'程序执行'], dict_cl[u'工卡执行'], dict_cl[u'工具设备'], dict_cl[u"维护作风"], dict_cl[u"现场管理"],
-                            dict_cl[u"维修记录"], dict_cl[u"生产组织"], dict_cl[u"器材管理"], dict_cl[u"其它"]]
-            single_month = map(lambda x: int(x), single_month)
+            single_month = [dict_cl['程序执行'], dict_cl['工卡执行'], dict_cl['工具设备'], dict_cl["维护作风"], dict_cl["现场管理"],
+                            dict_cl["维修记录"], dict_cl["生产组织"], dict_cl["器材管理"], dict_cl["其它"]]
+            single_month = [int(x) for x in single_month]
 
             list_month.append(year_month)
             list_month_cl_count.append({year_month : single_month})
@@ -447,7 +448,7 @@ def classification(request):
     }
     all_series = []
     for list_item in list_month_cl_count:
-        for item, value in list_item.items():
+        for item, value in list(list_item.items()):
             #print item, value
             series_single = series_single_orignal.copy()
             series_single["name"] = item
@@ -458,7 +459,7 @@ def classification(request):
     #获取最后一个元素，控制显示
     dict_selected = {}
     for index, list_item in enumerate(list_month_cl_count):
-        for item, value in list_item.items():
+        for item, value in list(list_item.items()):
             dict_selected[item] = False
             if index == (len(list_month_cl_count) - 1):
                 dict_selected[item] = True
@@ -477,60 +478,60 @@ def person_count(request):
         date_range = post_data["date_range"]
         date_start = date_range.split(' to ')[0]
         date_end = date_range.split(' to ')[1]
-        print date_start,date_end
+        print((date_start,date_end))
         df_data = pd.DataFrame(date_range_df_chinese_data(date_start,date_end))
     else:
         df_data = pd.read_hdf('data.h5', 'df')
 
     if df_data.empty:
-        return HttpResponse(u"该时间范围内无数据，请返回上一页")
+        return HttpResponse("该时间范围内无数据，请返回上一页")
 
     df_da = df_data
-    df_person = df_da[u'责任人']
+    df_person = df_da['责任人']
     #chinese_name = u'([/u4e00-/u9fa5]+)'
     #pattern = re.compile(chinese_name)
     res_dict = {}
     for item in df_person.values:
         #print item
-        results = re.findall(ur"[\u4e00-\u9fa5]+", item)
+        results = re.findall(r"[\u4e00-\u9fa5]+", item)
         for result in results:
             #print result
             res_dict[result] = res_dict.get(result, 0) + 1
-    person_count_list = res_dict.items()
+    person_count_list = list(res_dict.items())
     json_list = []
 
     for item in person_count_list:
         single_dict = {}
         # 去掉人员名单中的无
-        if item[0] == u'无':
-            print item[0], item[1]
+        if item[0] == '无':
+            print((item[0], item[1]))
             continue
-        single_dict[u'责任人'] = item[0]
-        single_dict[u'次数'] = item[1]
+        single_dict['责任人'] = item[0]
+        single_dict['次数'] = item[1]
         json_list.append(single_dict)
     json_person = json.dumps(json_list)
 
     #检查者
-    df_scrutator = df_da[u"检查者"]
+    df_scrutator = df_da["检查者"]
     res_dict = {}
     for item in df_scrutator.values:
         # print item
-        results = re.findall(ur"[\u4e00-\u9fa5\d]+", item)
+        results = re.findall(r"[\u4e00-\u9fa5\d]+", item)
         for result in results:
             # print result
             res_dict[result] = res_dict.get(result, 0) + 1
-    scrutator_count_list = res_dict.items()
+    scrutator_count_list = list(res_dict.items())
 
     json_list = []
 
     for item in scrutator_count_list:
         single_dict = {}
         # 去掉人员名单中的无
-        if item[0] == u'无':
-            print item[0], item[1]
+        if item[0] == '无':
+            print((item[0], item[1]))
             continue
-        single_dict[u'检查者'] = item[0]
-        single_dict[u'次数'] = item[1]
+        single_dict['检查者'] = item[0]
+        single_dict['次数'] = item[1]
         json_list.append(single_dict)
     json_scrutator = json.dumps(json_list)
     return render(request, "person_count.html", {'json_person': json_person,
@@ -552,23 +553,23 @@ def date_range_df_chinese_data(date_start, date_end):
         dict_name_verbose_name[field.name] = field.verbose_name
 
         if not field.verbose_name in exclude_list:
-            print field.verbose_name
+            print((field.verbose_name))
             colheaders.append(field.verbose_name.encode("utf8"))
             dataSchema[field.verbose_name] = ''
             columns_item = {
-                u"title": field.verbose_name,
-                u"field": field.verbose_name,
+                "title": field.verbose_name,
+                "field": field.verbose_name,
                 # u"sortable": u"true",
             }
-            if field.verbose_name == u"问题描述":
-                columns_item[u"width"] = u"20%"
-                columns_item[u"title"] = u"问题描述"
-            elif field.verbose_name == u"整改措施":
-                columns_item[u"width"] = u"20%"
-                columns_item[u"title"] = u"整改措施"
-            elif field.verbose_name == u"处理意见":
-                columns_item[u"width"] = u"6%"
-                columns_item[u"title"] = u"处理意见"
+            if field.verbose_name == "问题描述":
+                columns_item["width"] = "20%"
+                columns_item["title"] = "问题描述"
+            elif field.verbose_name == "整改措施":
+                columns_item["width"] = "20%"
+                columns_item["title"] = "整改措施"
+            elif field.verbose_name == "处理意见":
+                columns_item["width"] = "6%"
+                columns_item["title"] = "处理意见"
             else:
                 split_list = list(field.verbose_name)
                 # every two word add
@@ -576,11 +577,11 @@ def date_range_df_chinese_data(date_start, date_end):
                 for i in range(len(split_list)):
                     title_str = title_str + split_list[i]
                     if (i + 1) % 2 == 0:
-                        title_str = title_str + u"<br>"
-                if field.verbose_name == u"相关附件":
-                    columns_item[u'formatter'] = "attachment"
-                columns_item[u"title"] = title_str
-                columns_item[u"width"] = u"2%"
+                        title_str = title_str + "<br>"
+                if field.verbose_name == "相关附件":
+                    columns_item['formatter'] = "attachment"
+                columns_item["title"] = title_str
+                columns_item["width"] = "2%"
             columns_set.append(columns_item)
 
     json_columns = json.dumps(columns_set)
@@ -588,14 +589,14 @@ def date_range_df_chinese_data(date_start, date_end):
     upload_data = []
     for item in list_data:
         single_data = item['fields']
-        single_data[u'id'] = item['pk']
+        single_data['id'] = item['pk']
         upload_data.append(single_data)
         # print upload_data
 
     chinese_updata = []
     for item in upload_data:
         dict_updata = {}
-        for key, value in item.items():
+        for key, value in list(item.items()):
             dict_updata[dict_name_verbose_name[key]] = value
 
             # print chinese_updata
@@ -606,14 +607,14 @@ def date_range_df_chinese_data(date_start, date_end):
 @timeit
 def month_count_group_by_source(request):
     df_data = pd.read_hdf('data.h5', 'df')
-    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
-    string_index = df_data[u'日期']
+    df_da = pd.DataFrame(list_all_data(), index=df_data['日期'])
+    string_index = df_data['日期']
     # 计算出起止月份
     start_day = string_index.min()
     end_day = string_index.max()
     start_ar = arrow.get(start_day)
     end_ar = arrow.get(end_day)
-    print end_ar
+    print(end_ar)
 
     if start_ar.day >= 26:
         number_month = start_ar.month + 1
@@ -625,7 +626,7 @@ def month_count_group_by_source(request):
     else:
         number_month = end_ar.month + 1
     end_month = end_ar.replace(months=number_month)
-    print end_month
+    print(end_month)
 
     list_month = []
     list_month_count_quality = []
@@ -645,9 +646,9 @@ def month_count_group_by_source(request):
         try:
             df_month = df_da.loc[list_a_month]
             list_month.append(year_month)
-            list_month_count_quality.append(df_month[u'信息来源'][df_month[u'信息来源']==u"质量监管"].count())
-            list_month_count_workshop.append(df_month[u'信息来源'][df_month[u'信息来源']==u"车间监管"].count())
-            list_month_count_team.append(df_month[u'信息来源'][df_month[u'信息来源']==u"班组自查"].count())
+            list_month_count_quality.append(df_month['信息来源'][df_month['信息来源']=="质量监管"].count())
+            list_month_count_workshop.append(df_month['信息来源'][df_month['信息来源']=="车间监管"].count())
+            list_month_count_team.append(df_month['信息来源'][df_month['信息来源']=="班组自查"].count())
         except:
             continue
 
@@ -663,14 +664,14 @@ def month_count_group_by_source(request):
 @timeit
 def month_count_group_by_department(request):
     df_data = pd.read_hdf('data.h5', 'df')
-    df_da = pd.DataFrame(list_all_data(), index=df_data[u'日期'])
-    string_index = df_data[u'日期']
+    df_da = pd.DataFrame(list_all_data(), index=df_data['日期'])
+    string_index = df_data['日期']
     # 计算出起止月份
     start_day = string_index.min()
     end_day = string_index.max()
     start_ar = arrow.get(start_day)
     end_ar = arrow.get(end_day)
-    print end_ar
+    print(end_ar)
 
     if start_ar.day >= 26:
         number_month = start_ar.month + 1
@@ -682,7 +683,7 @@ def month_count_group_by_department(request):
     else:
         number_month = end_ar.month + 1
     end_month = end_ar.replace(months=number_month)
-    print end_month
+    print(end_month)
 
     list_month = []
     list_month_count_scheduled = []
@@ -703,10 +704,10 @@ def month_count_group_by_department(request):
         try:
             df_month = df_da.loc[list_a_month]
             list_month.append(year_month)
-            list_month_count_scheduled.append(df_month[u'受检单位'][df_month[u'受检单位']==u"定检"].count())
-            list_month_count_airline1.append(df_month[u'受检单位'][df_month[u'受检单位']==u"航线一"].count())
-            list_month_count_airline2.append(df_month[u'受检单位'][df_month[u'受检单位']==u"航线二"].count())
-            list_month_count_airline3.append(df_month[u'受检单位'][df_month[u'受检单位'] == u"航线三"].count())
+            list_month_count_scheduled.append(df_month['受检单位'][df_month['受检单位']=="定检"].count())
+            list_month_count_airline1.append(df_month['受检单位'][df_month['受检单位']=="航线一"].count())
+            list_month_count_airline2.append(df_month['受检单位'][df_month['受检单位']=="航线二"].count())
+            list_month_count_airline3.append(df_month['受检单位'][df_month['受检单位'] == "航线三"].count())
         except:
             continue
 

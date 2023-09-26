@@ -14,12 +14,12 @@ def import_location():
     txt = f.read()
     LocationList = []
     title = txt.split(',')
-    print title
+    print(title)
     for item in title:
         #print item
-        start,end = map(int,item.split('-'))
+        start,end = list(map(int,item.split('-')))
         #print start,end
-        print range(start,(end + 1))
+        print(list(range(start,(end + 1))))
         for number in range(start,(end + 1)):
             location = Location(name=number)
             LocationList.append(location)
@@ -33,7 +33,7 @@ def import_Time_Bucket():
     for hour in range(24):
         str_hour = str(hour).zfill(2)
         line_hour = str_hour + ":00-" + str_hour + ":59"
-        print line_hour
+        print(line_hour)
         time_bucket = Time_Bucket(name = line_hour)
         Time_Bucket_list.append(time_bucket)
     Time_Bucket.objects.bulk_create(Time_Bucket_list)
@@ -44,7 +44,7 @@ def import_Department():
     f.close()
     objectList = []
     title = txt.split('，')
-    print title
+    print(title)
     for item in title:
         department = Department(name=item)
         objectList.append(department)
@@ -56,7 +56,7 @@ def import_model(txt_file,model_object):
     f.close()
     objectList = []
     title = txt.split('，')
-    print title
+    print(title)
     for item in title:
         single_object = model_object(name=item)
         objectList.append(single_object)
@@ -64,7 +64,7 @@ def import_model(txt_file,model_object):
 
 def import_hr_info():
     objectList = []
-    f = open(u'人岗 按数据库department匹配名.csv')
+    f = open('人岗 按数据库department匹配名.csv')
     for line in f:
         item_list = line.split(',')
         employee_number, employee_name, department = item_list[0], item_list[1], item_list[2]
@@ -78,26 +78,26 @@ def import_hr_info():
 
 def import_hr_info_team():
     objectList = []
-    f = codecs.open(u'人岗 按数据库department匹配名 含班组.csv', "r", "utf-8")
+    f = codecs.open('人岗 按数据库department匹配名 含班组.csv', "r", "utf-8")
     # f = open(u'人岗 按数据库department匹配名 含班组.csv','r', 'utf-8')
-    print f
+    print(f)
     s = f.readlines()
-    print s
+    print(s)
     for line in s:
-        print line
+        print(line)
         item_list = line.split(',')
         employee_number, employee_name, department, team = item_list[0], item_list[1], item_list[2], item_list[3]
-        if employee_number == u'\ufeff338747':
-            employee_number = u'338747'
+        if employee_number == '\ufeff338747':
+            employee_number = '338747'
         department_id = Department.objects.get(name=department)
         employee_number = employee_number.zfill(8)
 
-        print type(employee_number), employee_number
+        print(type(employee_number), employee_number)
         team = team.strip()
         employee_number = employee_number.strip()
-        print employee_number, team
-        print type(team)
-        print team == u'无'
+        print(employee_number, team)
+        print(type(team))
+        print(team == '无')
         # print chardet.detect(team)
         # print chardet.detect(department)
         team_id = Team.objects.get(name=team)

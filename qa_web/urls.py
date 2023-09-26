@@ -12,7 +12,7 @@ Class-based views
 Including another URLconf
     1. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import include, url
+from django.urls import include, path
 from django.contrib import admin
 
 from django.conf import settings
@@ -26,31 +26,31 @@ from main import grade_views
 admin.autodiscover()
 
 urlpatterns = [
-    (url(r'^admin/', include(admin.site.urls))),
+    path(r'^admin/', include('admin.site.urls'), name='admin'),
     #mysite
-    (url(r'^$', low_views.home, name='home')),
-    url(r'^information$', low_views.information),
-    url(r'^background$', low_views.background),
-    url(r'^source$', low_views.source),
-    url(r'^source_month$', low_views.source_month, name='source_month'),
-    url(r'^month_count$', low_views.month_count),
-    url(r'^classification$', low_views.classification),
-    url(r'^person_count/$', low_views.person_count),
-    url(r'^month_count_group_by_source$', low_views.month_count_group_by_source),
-    url(r'^month_count_group_by_department$', low_views.month_count_group_by_department),
-    url(r'^source_month_stack$', high_views.source_month_stack),
-    url(r'^ajax_source_month_stack$', high_views.ajax_source_month_stack, name='ajax_source_month_stack'),
-    url(r'^team_month_stack$', high_views.team_month_stack),
-    url(r'^ajax_team_month_stack$', high_views.ajax_team_month_stack, name='ajax_team_month_stack'),
-    url(r'^self_inspect_trendence/(\d{1,2})/$',high_views.self_inspect_trendence),
-    url(r'^grade_scatter/$',high_views.grade_scatter),
-    url(r'^refresh_middle_data$', sl_views.refresh_middle_data),
+    path(r'^$', low_views.home, name='home'),
+    path(r'^information$', low_views.information),
+    path(r'^background$', low_views.background),
+    path(r'^source$', low_views.source),
+    path(r'^source_month$', low_views.source_month, name='source_month'),
+    path(r'^month_count$', low_views.month_count),
+    path(r'^classification$', low_views.classification),
+    path(r'^person_count/$', low_views.person_count),
+    path(r'^month_count_group_by_source$', low_views.month_count_group_by_source),
+    path(r'^month_count_group_by_department$', low_views.month_count_group_by_department),
+    path(r'^source_month_stack$', high_views.source_month_stack),
+    path(r'^ajax_source_month_stack$', high_views.ajax_source_month_stack, name='ajax_source_month_stack'),
+    path(r'^team_month_stack$', high_views.team_month_stack),
+    path(r'^ajax_team_month_stack$', high_views.ajax_team_month_stack, name='ajax_team_month_stack'),
+    path(r'^self_inspect_trendence/(\d{1,2})/$',high_views.self_inspect_trendence),
+    path(r'^grade_scatter/$',high_views.grade_scatter),
+    path(r'^refresh_middle_data$', sl_views.refresh_middle_data),
     # grade_views
-    url(r'^staff_grade_year$', grade_views.staff_grade_year),
-    url(r'^scrutator_grade$', grade_views.strutator_grade),
-    url(r'^department_grade$', grade_views.department_grade),
-    url(r'^self_checking_grade$', grade_views.self_checking_grade),
-    url(r'^self_checking_grade_totlal$', grade_views.self_checking_grade_totlal),
+    path(r'^staff_grade_year$', grade_views.staff_grade_year),
+    path(r'^scrutator_grade$', grade_views.strutator_grade),
+    path(r'^department_grade$', grade_views.department_grade),
+    path(r'^self_checking_grade$', grade_views.self_checking_grade),
+    path(r'^self_checking_grade_totlal$', grade_views.self_checking_grade_totlal),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

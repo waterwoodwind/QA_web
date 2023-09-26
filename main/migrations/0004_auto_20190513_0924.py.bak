@@ -19,6 +19,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='qa_info',
             name='grade',
-            field=models.DecimalField(blank=True, decimal_places=0, max_digits=1, null=True, verbose_name='\\u4e25\\u91cd\\u7a0b\\u5ea6'),
+            field=models.DecimalField(blank=True, decimal_places=0, max_digits=1, null=True, verbose_name='\u4e25\u91cd\u7a0b\u5ea6'),
         ),
     ]

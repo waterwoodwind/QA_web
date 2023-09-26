@@ -24,23 +24,23 @@ class qa_infoAdmin(admin.ModelAdmin):
             dict_grade[lines[0].encode("utf-8")] = lines[1]
         f_txt.close()
         description = obj.problem_description
-        print description
+
         description = description.encode("utf-8")
-        print description
+
         result = re.search(r'【.*】', description)
         if result:
             des = result.group()
-            print result.group()
+
             des = des.lstrip(r'【')
             des = des.rstrip(r'】')
-            print des
+
             if dict_grade.get(des):
                 obj.grade = dict_grade[des]
-                print des.encode('gb2312')
-        else:
-            print ' NO MATCH'
 
-        print obj.grade
+        else:
+            print(' NO MATCH')
+
+
         obj.save()
 
 class hr_infoAdmin(admin.ModelAdmin):
